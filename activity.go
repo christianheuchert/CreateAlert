@@ -1,55 +1,33 @@
-package testActivity
+package sample
 
 import (
-	"fmt"
-
 	"github.com/project-flogo/core/activity"
-	"github.com/project-flogo/core/data/coerce"
+	"github.com/project-flogo/core/data/metadata"
 )
 
 func init() {
-	_ = activity.Register(&Activity{})
+	_ = activity.Register(&Activity{}) //activity.Register(&Activity{}, New) to create instances using factory method 'New'
 }
 
-type Input struct {
-	Message    string `md:"message"`    // The message to log
-	AddDetails bool   `md:"addDetails"` // Append contextual execution information to the log message
-	UsePrint   bool   `md:"usePrint"`
-}
+var activityMd = activity.ToMetadata(&Settings{}, &Input{}, &Output{})
 
-func (i *Input) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		"message":    i.Message,
-		"addDetails": i.AddDetails,
-		"usePrint":   i.UsePrint,
-	}
-}
+//New optional factory method, should be used if one activity instance per configuration is desired
+func New(ctx activity.InitContext) (activity.Activity, error) {
 
-func (i *Input) FromMap(values map[string]interface{}) error {
-
-	var err error
-	i.Message, err = coerce.ToString(values["message"])
+	s := &Settings{}
+	err := metadata.MapToStruct(ctx.Settings(), s, true)
 	if err != nil {
-		return err
-	}
-	i.AddDetails, err = coerce.ToBool(values["addDetails"])
-	if err != nil {
-		return err
+		return nil, err
 	}
 
-	i.UsePrint, err = coerce.ToBool(values["usePrint"])
-	if err != nil {
-		return err
-	}
+	ctx.Logger().Debugf("Setting: %s", s.ASetting)
 
-	return nil
+	act := &Activity{} //add aSetting to instance
+
+	return act, nil
 }
 
-var activityMd = activity.ToMetadata(&Input{})
-
-// Activity is an Activity that is used to log a message to the console
-// inputs : {message, flowInfo}
-// outputs: none
+// Activity is an sample Activity that can be used as a base to create a custom activity
 type Activity struct {
 }
 
@@ -62,19 +40,17 @@ func (a *Activity) Metadata() *activity.Metadata {
 func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 
 	input := &Input{}
-	ctx.GetInputObject(input)
-
-	msg := input.Message
-
-	if input.AddDetails {
-		msg = fmt.Sprintf("'%s' - HostID [%s], HostName [%s], Activity [%s]", msg,
-			ctx.ActivityHost().ID(), ctx.ActivityHost().Name(), ctx.Name())
+	err = ctx.GetInputObject(input)
+	if err != nil {
+		return true, err
 	}
 
-	if input.UsePrint {
-		fmt.Println(msg)
-	} else {
-		ctx.Logger().Info(msg)
+	ctx.Logger().Debugf("Input: %s", input.AnInput)
+
+	output := &Output{AnOutput: input.AnInput}
+	err = ctx.SetOutputObject(output)
+	if err != nil {
+		return true, err
 	}
 
 	return true, nil

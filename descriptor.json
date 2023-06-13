@@ -5,24 +5,24 @@
   "title": "Airista Activity",
   "description": "Airista Test Activity",
   "homepage": "https://github.com/christianheuchert/TestActivity",
+  "settings": [
+    {
+      "name": "Setting",
+      "type": "string",
+      "required": true
+    }
+  ],
   "input": [
     {
-      "name": "message",
+      "name": "TestData",
       "type": "string",
-      "value": "",
-      "description": "The message to log"
-    },
+      "required": true
+    }
+  ],
+  "output": [
     {
-      "name": "addDetails",
-      "type": "boolean",
-      "value": false,
-      "description": "Append contextual execution information to the log message"
-    },
-    {
-      "name": "usePrint",
-      "type": "boolean",
-      "value": false,
-      "description": "Use Print to stdout instead of built-in logger"
+      "name": "ParsedData",
+      "type": "string"
     }
   ]
 }
