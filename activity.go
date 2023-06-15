@@ -56,6 +56,9 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	fmt.Println(data.Mac)
 	ctx.Logger().Info(data.Mac)
 
+	fmt.Println("INSIDE ACTIVITY.GO")
+	ctx.Logger().Info("INSIDE ACTIVITY.GO")
+
 	output := &Output{X: data.Pos.X, Y: data.Pos.Y, MAC: data.Mac}
 	err = ctx.SetOutputObject(output)
 	if err != nil {
