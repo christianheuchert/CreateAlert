@@ -1,31 +1,29 @@
 {
-  "name": "flogo-log",
+  "name": "Airista Parse",
   "type": "flogo:activity",
-  "version": "0.10.0",
-  "title": "Airista Log",
-  "description": "Logs a message",
-  "homepage": "https://github.com/project-flogo/contrib/tree/master/activity/log",
-  "display": {
-    "icon": "log-icon.svg"
-  },
+  "version": "0.0.1",
+  "title": "Airista: Parse Position Message",
+  "description": "Parse Position Message",
+  "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "input": [
     {
-      "name": "message",
+      "name": "posMsg",
       "type": "string",
-      "value": "",
-      "description": "The message to log"
+      "required": true
+    }
+  ],
+  "output": [
+    {
+      "name": "X",
+      "type": "string"
     },
     {
-      "name": "addDetails",
-      "type": "boolean",
-      "value": false,
-      "description": "Append contextual execution information to the log message"
+      "name": "Y",
+      "type": "string"
     },
     {
-      "name": "usePrint",
-      "type": "boolean",
-      "value": false,
-      "description": "Use Print to stdout instead of built-in logger"
+      "name": "MAC",
+      "type": "string"
     }
   ]
 }

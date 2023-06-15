@@ -1,55 +1,36 @@
-package log
+package sample
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/project-flogo/core/activity"
-	"github.com/project-flogo/core/data/coerce"
+	//"github.com/project-flogo/core/data/metadata"
 )
 
 func init() {
-	_ = activity.Register(&Activity{})
+	_ = activity.Register(&Activity{}) //activity.Register(&Activity{}, New) to create instances using factory method 'New'
 }
 
-type Input struct {
-	Message    string `md:"message"`    // The message to log
-	AddDetails bool   `md:"addDetails"` // Append contextual execution information to the log message
-	UsePrint   bool   `md:"usePrint"`
-}
+var activityMd = activity.ToMetadata(&Input{}, &Output{})
 
-func (i *Input) ToMap() map[string]interface{} {
-	return map[string]interface{}{
-		"message":    i.Message,
-		"addDetails": i.AddDetails,
-		"usePrint":   i.UsePrint,
-	}
-}
+//New optional factory method, should be used if one activity instance per configuration is desired
+// func New(ctx activity.InitContext) (activity.Activity, error) {
 
-func (i *Input) FromMap(values map[string]interface{}) error {
+// 	s := &Settings{}
+// 	err := metadata.MapToStruct(ctx.Settings(), s, true)
+// 	if err != nil {
+// 		return nil, err
+// 	}
 
-	var err error
-	i.Message, err = coerce.ToString(values["message"])
-	if err != nil {
-		return err
-	}
-	i.AddDetails, err = coerce.ToBool(values["addDetails"])
-	if err != nil {
-		return err
-	}
+// 	ctx.Logger().Debugf("Setting: %s", s.ASetting)
 
-	i.UsePrint, err = coerce.ToBool(values["usePrint"])
-	if err != nil {
-		return err
-	}
+// 	act := &Activity{} //add aSetting to instance
 
-	return nil
-}
+// 	return act, nil
+// }
 
-var activityMd = activity.ToMetadata(&Input{})
-
-// Activity is an Activity that is used to log a message to the console
-// inputs : {message, flowInfo}
-// outputs: none
+// Activity is an sample Activity that can be used as a base to create a custom activity
 type Activity struct {
 }
 
@@ -62,19 +43,23 @@ func (a *Activity) Metadata() *activity.Metadata {
 func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 
 	input := &Input{}
-	ctx.GetInputObject(input)
-
-	msg := input.Message
-
-	if input.AddDetails {
-		msg = fmt.Sprintf("'%s' - HostID [%s], HostName [%s], Activity [%s]", msg,
-			ctx.ActivityHost().ID(), ctx.ActivityHost().Name(), ctx.Name())
+	err = ctx.GetInputObject(input)
+	if err != nil {
+		return true, err
 	}
 
-	if input.UsePrint {
-		fmt.Println(msg)
-	} else {
-		ctx.Logger().Info(msg)
+	posMsg := input.PosMsg
+	data := PositionMessage{}
+	json.Unmarshal([]byte(posMsg), &data)
+
+
+	fmt.Println(data.Mac)
+	ctx.Logger().Info(data.Mac)
+
+	output := &Output{X: data.Pos.X, Y: data.Pos.Y, MAC: data.Mac}
+	err = ctx.SetOutputObject(output)
+	if err != nil {
+		return true, err
 	}
 
 	return true, nil
