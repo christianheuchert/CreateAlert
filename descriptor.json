@@ -2,7 +2,7 @@
   "name": "Airista Parse",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "Airista: Parse Position Message 5",
+  "title": "Airista: Parse Position Message 6",
   "description": "Parse Position Message",
   "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "input": [
