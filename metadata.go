@@ -7,20 +7,20 @@ type Input struct {
 }
 
 func (i *Input) FromMap(values map[string]interface{}) error {
-	strVal, _ := coerce.ToString(values["PosMsg"])
+	strVal, _ := coerce.ToString(values["posMsg"])
 	i.PosMsg = strVal
 	return nil
 }
 
 func (i *Input) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"PosMsg": i.PosMsg,
+		"posMsg": i.PosMsg,
 	}
 }
 
 type Output struct {
-	X int `md:"X"`
-	Y int `md:"Y"`
+	X int `md:"x"`
+	Y int `md:"y"`
 	MAC string `md:"MAC"`
 }
 

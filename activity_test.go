@@ -28,7 +28,7 @@ func TestEval(t *testing.T) {
 	assert.True(t, done)
 	assert.Nil(t, err)
 
-	output := &Output{X: 1168, Y: 598, MAC: "C4:CB:6B:22:1B:DA"}
+	output := &Output{} //X: 1168, Y: 598, MAC: "C4:CB:6B:22:1B:DA"
 	err = tc.GetOutputObject(output)
 	assert.Nil(t, err)
 	assert.Equal(t, "C4:CB:6B:22:1B:DA", output.MAC)
