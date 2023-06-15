@@ -1,28 +1,31 @@
 {
-  "name": "Airista Activity",
+  "name": "flogo-log",
   "type": "flogo:activity",
-  "version": "0.0.1",
-  "title": "Airista Activity",
-  "description": "Airista Test Activity",
-  "homepage": "https://github.com/christianheuchert/TestActivity",
-  "settings": [
-    {
-      "name": "Setting",
-      "type": "string",
-      "required": true
-    }
-  ],
+  "version": "0.10.0",
+  "title": "Airista Log",
+  "description": "Logs a message",
+  "homepage": "https://github.com/project-flogo/contrib/tree/master/activity/log",
+  "display": {
+    "icon": "log-icon.svg"
+  },
   "input": [
     {
-      "name": "TestData",
+      "name": "message",
       "type": "string",
-      "required": true
-    }
-  ],
-  "output": [
+      "value": "",
+      "description": "The message to log"
+    },
     {
-      "name": "ParsedData",
-      "type": "string"
+      "name": "addDetails",
+      "type": "boolean",
+      "value": false,
+      "description": "Append contextual execution information to the log message"
+    },
+    {
+      "name": "usePrint",
+      "type": "boolean",
+      "value": false,
+      "description": "Use Print to stdout instead of built-in logger"
     }
   ]
 }

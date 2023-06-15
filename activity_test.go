@@ -1,4 +1,4 @@
-package sample
+package log
 
 import (
 	"testing"
@@ -20,16 +20,21 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{AnInput: "test"}
-	err := tc.SetInputObject(input)
-	assert.Nil(t, err)
 
-	done, err := act.Eval(tc)
-	assert.True(t, done)
-	assert.Nil(t, err)
+	input := &Input{Message: "test message", AddDetails: true}
+	tc.SetInputObject(input)
 
-	output := &Output{}
-	err = tc.GetOutputObject(output)
-	assert.Nil(t, err)
-	assert.Equal(t, "test", output.AnOutput)
+	act.Eval(tc)
+}
+
+func TestAddToFlow(t *testing.T) {
+
+	act := &Activity{}
+	tc := test.NewActivityContext(act.Metadata())
+
+	//setup attrs
+	tc.SetInput("message", "test message")
+	tc.SetInput("addDetails", true)
+
+	act.Eval(tc)
 }
