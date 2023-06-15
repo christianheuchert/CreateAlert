@@ -37,13 +37,15 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	json.Unmarshal([]byte(posMsg), &data)
 
 
-	fmt.Println(data.Mac)
-	ctx.Logger().Info(data.Mac)
+	// fmt.Println(data.Mac, data.Pos.X, data.Pos.Y)
+	// ctx.Logger().Info(data.Mac)
 
-	fmt.Println("fmt.Println59")
-	ctx.Logger().Info("ctx.Logger().Info60")
+	// fmt.Println("fmt.Println59")
+	// ctx.Logger().Info("ctx.Logger().Info60")
 
 	output := &Output{X: data.Pos.X, Y: data.Pos.Y, MAC: data.Mac}
+	fmt.Println("Output: ", output)
+	ctx.Logger().Info("Output: ", output)
 	err = ctx.SetOutputObject(output)
 	if err != nil {
 		return true, err
