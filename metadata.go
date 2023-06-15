@@ -19,18 +19,18 @@ func (i *Input) ToMap() map[string]interface{} {
 }
 
 type Output struct {
-	X int `md:"x"`
-	Y int `md:"y"`
+	X int `md:"X"`
+	Y int `md:"Y"`
 	MAC string `md:"MAC"`
 }
 
 func (o *Output) FromMap(values map[string]interface{}) error {
 	var err error
-	o.X, err = coerce.ToInt(values["x"])
+	o.X, err = coerce.ToInt(values["X"])
 	if err != nil {
 		return err
 	}
-	o.Y, err = coerce.ToInt(values["y"])
+	o.Y, err = coerce.ToInt(values["Y"])
 	if err != nil {
 		return err
 	}
@@ -45,8 +45,8 @@ func (o *Output) FromMap(values map[string]interface{}) error {
 
 func (o *Output) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"x":    o.X,
-		"y": o.Y,
+		"X":    o.X,
+		"Y": o.Y,
 		"MAC":   o.MAC,
 	}
 }
