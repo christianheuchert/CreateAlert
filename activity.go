@@ -2,7 +2,7 @@ package sample
 
 import (
 	"encoding/json"
-	"fmt"
+	// "fmt"
 
 	"github.com/project-flogo/core/activity"
 	//"github.com/project-flogo/core/data/metadata"
@@ -44,8 +44,8 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	// ctx.Logger().Info("ctx.Logger().Info60")
 
 	output := &Output{X: data.Pos.X, Y: data.Pos.Y, MAC: data.Mac}
-	fmt.Println("Output: ", output)
-	ctx.Logger().Info("Output: ", output)
+	// fmt.Println("Output: ", output)
+	// ctx.Logger().Info("Output: ", output)
 	err = ctx.SetOutputObject(output)
 	if err != nil {
 		return true, err
