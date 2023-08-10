@@ -1,43 +1,58 @@
-package sample
+package SendMessageToAssets
 
-import "github.com/project-flogo/core/data/coerce"
+import (
+	"github.com/project-flogo/core/data/coerce"
+)
 
 type Input struct {
-	PosMsg string `md:"posMsg,required"` // AoA-postion mqtt msg
+	IP string  `md:"IP,required"`
+	CustomerId string`md:"CustomerId,required"`
+	Username string `md:"Username,required"`
+	Password string `md:"Password,required"`
+	StaffIdList string `md:"StaffIdList,required"`
+	Message string `md:"Message,required"`
 }
 
 func (i *Input) FromMap(values map[string]interface{}) error {
-	strVal, _ := coerce.ToString(values["posMsg"])
-	i.PosMsg = strVal
+	strVal, _ := coerce.ToString(values["IP"])
+	i.IP = strVal
+
+	strVal, _ = coerce.ToString(values["CustomerId"])
+	i.CustomerId = strVal
+
+	strVal, _ = coerce.ToString(values["Username"])
+	i.Username = strVal
+
+	strVal, _ = coerce.ToString(values["Password"])
+	i.Password = strVal
+
+	strVal, _ = coerce.ToString(values["StaffIdList"])
+	i.StaffIdList = strVal
+
+	strVal, _ = coerce.ToString(values["Message"])
+	i.Message = strVal
 	return nil
 }
 
 func (i *Input) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"posMsg": i.PosMsg,
+		"IP": i.IP,
+		"CustomerId": i.CustomerId,
+		"Username": i.Username,
+		"Password": i.Password,
+		"StaffIdList": i.StaffIdList,
+		"Message": i.Message,
 	}
 }
 
 type Output struct {
-	X int `md:"X"`
-	Y int `md:"Y"`
-	MAC string `md:"MAC"`
+	Status string `md:"Status"`
 }
 
 func (o *Output) FromMap(values map[string]interface{}) error {
-	var err error
-	o.X, err = coerce.ToInt(values["X"])
-	if err != nil {
-		return err
-	}
-	o.Y, err = coerce.ToInt(values["Y"])
-	if err != nil {
-		return err
-	}
-
-	o.MAC, err = coerce.ToString(values["MAC"])
-	if err != nil {
-		return err
+	Status, ok:= (values["Status"]).(string) // type assertion
+	if ok {
+		o.Status = Status
 	}
 
 	return nil
@@ -45,24 +60,10 @@ func (o *Output) FromMap(values map[string]interface{}) error {
 
 func (o *Output) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"X":    o.X,
-		"Y": o.Y,
-		"MAC":   o.MAC,
+		"Status":    o.Status,
 	}
 }
 
-type PositionMessage struct {
-	Mac string `json:"MAC"`
-	Pos struct {
-		MapID string `json:"mapID"`
-		X     int    `json:"x"`
-		Y     int    `json:"y"`
-	} `json:"pos"`
-	Status struct {
-		Rpt  int `json:"rpt"`
-		Sfsw int `json:"sfsw"`
-		Chg  int `json:"chg"`
-		Batt int `json:"batt"`
-		Sqn  int `json:"sqn"`
-	} `json:"status"`
-}
+type Asset struct {
+	ID                           int    `json:"Id"`
+} 

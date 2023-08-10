@@ -1,4 +1,4 @@
-package sample
+package SendMessageToAssets
 
 import (
 	"testing"
@@ -20,7 +20,8 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{PosMsg: "{\"MAC\":\"C4:CB:6B:22:1B:DA\",\"pos\":{\"mapID\":\"14741\",\"x\":1168,\"y\":598},\"status\":{\"rpt\":0,\"sfsw\":0,\"chg\":0,\"batt\":0,\"sqn\":0}}"}
+	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", StaffIdList: `{"Id": 9064}`, Message: "Test Single-Message 5"}
+	// StaffIdList "9064" OR "9064,37685" OR "{ID: 9064}"
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 
@@ -28,8 +29,9 @@ func TestEval(t *testing.T) {
 	assert.True(t, done)
 	assert.Nil(t, err)
 
-	output := &Output{} //X: 1168, Y: 598, MAC: "C4:CB:6B:22:1B:DA"
+	output := &Output{} 
 	err = tc.GetOutputObject(output)
 	assert.Nil(t, err)
-	assert.Equal(t, "C4:CB:6B:22:1B:DA", output.MAC)
+
+	assert.Equal(t, "true", output.Status)
 }

@@ -1,28 +1,45 @@
 {
-  "name": "Airista Parse",
+  "name": "Send Message To Assets",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "Airista: Parse Position Message 6",
-  "description": "Parse Position Message",
+  "title": "Send Message To Assets",
+  "description": "Sends message to staffs devices, on success returns true, else false",
   "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "input": [
     {
-      "name": "posMsg",
+      "name": "IP",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "CustomerId",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Username",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "StaffIdList",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Message",
       "type": "string",
       "required": true
     }
   ],
   "output": [
     {
-      "name": "X",
-      "type": "int"
-    },
-    {
-      "name": "Y",
-      "type": "int"
-    },
-    {
-      "name": "MAC",
+      "name": "Status",
       "type": "string"
     }
   ]
