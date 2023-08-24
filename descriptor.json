@@ -1,10 +1,10 @@
 {
-  "name": "Send Message To Assets",
+  "name": "Airista Get Users",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "Send Message To Assets",
-  "description": "Sends message to staffs devices, on success returns true, else false",
-  "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
+  "title": "Get Users",
+  "description": "Returns Array of Users",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetAllUsers",
   "input": [
     {
       "name": "IP",
@@ -25,21 +25,11 @@
       "name": "Password",
       "type": "string",
       "required": true
-    },
-    {
-      "name": "StaffIdList",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "Message",
-      "type": "string",
-      "required": true
     }
   ],
   "output": [
     {
-      "name": "Status",
+      "name": "Users",
       "type": "string"
     }
   ]

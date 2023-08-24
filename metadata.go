@@ -1,16 +1,16 @@
-package SendMessageToAssets
+package getDepartments
 
 import (
+	"encoding/json"
+
 	"github.com/project-flogo/core/data/coerce"
 )
 
 type Input struct {
-	IP string  `md:"IP,required"`
-	CustomerId string`md:"CustomerId,required"`
-	Username string `md:"Username,required"`
-	Password string `md:"Password,required"`
-	StaffIdList string `md:"StaffIdList,required"`
-	Message string `md:"Message,required"`
+	IP         string `md:"IP,required"`
+	CustomerId string `md:"CustomerId,required"`
+	Username   string `md:"Username,required"`
+	Password   string `md:"Password,required"`
 }
 
 func (i *Input) FromMap(values map[string]interface{}) error {
@@ -25,45 +25,36 @@ func (i *Input) FromMap(values map[string]interface{}) error {
 
 	strVal, _ = coerce.ToString(values["Password"])
 	i.Password = strVal
-
-	strVal, _ = coerce.ToString(values["StaffIdList"])
-	i.StaffIdList = strVal
-
-	strVal, _ = coerce.ToString(values["Message"])
-	i.Message = strVal
 	return nil
 }
 
 func (i *Input) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"IP": i.IP,
+		"IP":         i.IP,
 		"CustomerId": i.CustomerId,
-		"Username": i.Username,
-		"Password": i.Password,
-		"StaffIdList": i.StaffIdList,
-		"Message": i.Message,
+		"Username":   i.Username,
+		"Password":   i.Password,
 	}
 }
 
 type Output struct {
-	Status string `md:"Status"`
+	Users string `md:"Users"`
 }
 
 func (o *Output) FromMap(values map[string]interface{}) error {
-	Status, ok:= (values["Status"]).(string) // type assertion
-	if ok {
-		o.Status = Status
-	}
+	strVal, _ := coerce.ToString(values["Users"])
+	o.Users = strVal
 
 	return nil
 }
 
 func (o *Output) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"Status":    o.Status,
+		"Users": o.Users,
 	}
 }
 
-type Asset struct {
-	ID                           int    `json:"Id"`
-} 
+type GetAllUsersResponse struct {
+	List json.RawMessage `json:"List"`
+}
+

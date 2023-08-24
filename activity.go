@@ -1,15 +1,11 @@
-package SendMessageToAssets
+package getDepartments
 
 import (
 	"encoding/base64"
 	"encoding/json"
-	"strconv"
-
-	// "encoding/json"
 	"fmt"
-	// "io"
+	"io"
 	"net/http"
-	"net/url"
 
 	"github.com/project-flogo/core/activity"
 )
@@ -38,11 +34,11 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Status := SendMessageToAssets(input.IP, input.CustomerId, input.Username, input.Password, input.StaffIdList, input.Message)
+	Users := RestCallGetUsers(input.IP, input.CustomerId, input.Username, input.Password)
 
-	output := &Output{Status: Status}
+	output := &Output{Users: Users}
 
-	// fmt.Println("Output: ", output.Status)
+	// fmt.Println("Output: ", output.Users)
 	// ctx.Logger().Info("Output: ", output)
 
 	err = ctx.SetOutputObject(output)
@@ -53,32 +49,21 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-func SendMessageToAssets(IP string, CustomerId string, username string, password string, StaffIdList string, Message string)string{
-
-	// filtering url string's special characters
-	FilteredMessage := url.QueryEscape(Message)
+// http://52.45.17.177:802/XpertRestApi/api/MetaData/GetGroups?CustomerId=1
+func RestCallGetUsers(IP string, customerId string, uname string, pword string) string {
+	username := uname
+	password := pword
 
 	// Create an HTTP client
 	client := &http.Client{}
 
-	var asset Asset
-	assetCheck := json.Unmarshal([]byte(StaffIdList), &asset) // check if Asset Obj
-	if (assetCheck == nil){ // if no error puting into asset struct, then obj
-		StaffIdList = strconv.Itoa(asset.ID)
-	}
-
 	// Create the request
-	url := "http://" + IP + "/XpertRestApi/api/Device/DisplayMessageOnTag?" +
-		"StaffIdList=" + StaffIdList + "&" +
-		"Message=" + FilteredMessage + "&" +
-		"CustomerId=" + CustomerId
-	req, err := http.NewRequest("POST", url, nil)
+	url := "http://" + IP + "/XpertRestApi/api/Users/GetAll?CustomerId=" + customerId
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
-		return err.Error()
+		return ""
 	}
-
-	req.Header.Add("Content-Type", "application/json")
 
 	// Add basic authentication to the request header
 	auth := username + ":" + password
@@ -89,14 +74,26 @@ func SendMessageToAssets(IP string, CustomerId string, username string, password
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error making request:", err)
-		return err.Error()
+		return ""
 	}
+
 	defer resp.Body.Close()
 
-	returnedStatus := "false"
-	if(resp.Status == "200 OK"){
-		returnedStatus = "true"
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading response body:", err)
+		return ""
 	}
 
-	return returnedStatus
+	translatedData := &GetAllUsersResponse{}
+	json.Unmarshal([]byte(string(body)), &translatedData)
+
+	listUsers, err := json.Marshal(translatedData.List)
+	if err != nil {
+		fmt.Println("Error converting to JSON:", err)
+		return ""
+	}
+
+	return string(listUsers)
 }
