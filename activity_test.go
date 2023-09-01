@@ -32,5 +32,5 @@ func TestEval(t *testing.T) {
 	err = tc.GetOutputObject(output)
 	assert.Nil(t, err)
 
-	assert.NotNil(t, output.Users)
+	assert.NotNil(t, output.Departments)
 }

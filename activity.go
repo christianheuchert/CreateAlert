@@ -34,11 +34,11 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Users := RestCallGetUsers(input.IP, input.CustomerId, input.Username, input.Password)
+	departments := RestCallGetDepartments(input.IP, input.CustomerId, input.Username, input.Password)
 
-	output := &Output{Users: Users}
+	output := &Output{Departments: departments}
 
-	// fmt.Println("Output: ", output.Users)
+	// fmt.Println("Output: ", output.Departments[0])
 	// ctx.Logger().Info("Output: ", output)
 
 	err = ctx.SetOutputObject(output)
@@ -49,13 +49,14 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-// http://52.45.17.177:802/XpertRestApi/api/MetaData/GetGroups?CustomerId=1
-func RestCallGetUsers(IP string, customerId string, uname string, pword string) []string {
+//http://52.45.17.177:802/XpertRestApi/api/MetaData/GetGroups?CustomerId=1
+func RestCallGetDepartments(IP string, customerId string, username string, password string )[]string {
+
 	// Create an HTTP client
 	client := &http.Client{}
 
 	// Create the request
-	url := "http://" + IP + "/XpertRestApi/api/Users/GetAll?CustomerId=" + customerId +"&NumberOfRecords=100000"
+	url := "http://"+IP+"/XpertRestApi/api/MetaData/GetDepartments?CustomerId="+customerId
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
@@ -63,7 +64,7 @@ func RestCallGetUsers(IP string, customerId string, uname string, pword string) 
 	}
 
 	// Add basic authentication to the request header
-	auth := uname + ":" + pword
+	auth := username + ":" + password
 	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 	req.Header.Add("Authorization", basicAuth)
 
@@ -74,25 +75,18 @@ func RestCallGetUsers(IP string, customerId string, uname string, pword string) 
 		return []string{}
 	}
 	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
 
-	// Read the response body
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return []string{}
-	}
-
-	// Unmarshal the config JSON into an object
-	//Declare response struct object
-	var response GetAllUsersResponse
-	errUnmarshal := json.Unmarshal(body, &response)
+	// Unmarshal the respnse JSON into an object
+	var departments Response
+	errUnmarshal := json.Unmarshal(body, &departments)
 	if errUnmarshal != nil {
 	 	fmt.Println(errUnmarshal)
 		return []string{}
 	}
 
 	var jsonStrings []string // return data as string array
-	for _, asset := range response.List {
+	for _, asset := range departments.List {
 		jsonData, err2 := json.Marshal(asset)
 		if err2 != nil {
 			fmt.Println("Error:", err)

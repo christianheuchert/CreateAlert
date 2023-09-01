@@ -1,6 +1,6 @@
-# GetAllUsers
+# GetDepartments
 
-This activity retrieves all Users for the provided customer identification number.
+This activity retrieves departments associated with the given customer identification number.
 
 ## Configuration
 
@@ -15,6 +15,6 @@ This activity retrieves all Users for the provided customer identification numbe
 
 ### Output:
 
-| Name  | Type   | Description              |
-| :---- | :----- | :----------------------- |
-| Users | string | Raw json string of users |
+| Name        | Type  | Description                     |
+| :---------- | :---- | :------------------------------ |
+| Departments | array | Array of strigified departments |

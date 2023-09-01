@@ -1,10 +1,10 @@
 {
-  "name": "Airista Get Users",
+  "name": "Airista Get Departments",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Users",
-  "description": "Returns Array of Users",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetAllUsers",
+  "title": "A1: Get Departments",
+  "description": "Returns JSON of Departments",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetDepartments",
   "input": [
     {
       "name": "IP",
@@ -29,7 +29,7 @@
   ],
   "output": [
     {
-      "name": "Users",
+      "name": "Departments",
       "type": "array"
     }
   ]
