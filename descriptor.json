@@ -1,10 +1,10 @@
 {
-  "name": "Airista Get Departments",
+  "name": "Get Groups",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Departments",
-  "description": "Returns JSON of Departments",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetDepartments",
+  "title": "A1: Get Groups",
+  "description": "Returns Array of Groups",
+  "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "input": [
     {
       "name": "IP",
@@ -29,7 +29,7 @@
   ],
   "output": [
     {
-      "name": "Departments",
+      "name": "Groups",
       "type": "array"
     }
   ]

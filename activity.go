@@ -1,4 +1,4 @@
-package getDepartments
+package getGroups
 
 import (
 	"encoding/base64"
@@ -34,11 +34,11 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	departments := RestCallGetDepartments(input.IP, input.CustomerId, input.Username, input.Password)
+	Groups := RestCallGetGroups(input.IP, input.CustomerId, input.Username, input.Password)
 
-	output := &Output{Departments: departments}
+	output := &Output{Groups: Groups}
 
-	// fmt.Println("Output: ", output.Departments[0])
+	// fmt.Println("Output: ", output.Groups)
 	// ctx.Logger().Info("Output: ", output)
 
 	err = ctx.SetOutputObject(output)
@@ -50,13 +50,12 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 }
 
 //http://52.45.17.177:802/XpertRestApi/api/MetaData/GetGroups?CustomerId=1
-func RestCallGetDepartments(IP string, customerId string, username string, password string )[]string {
-
+func RestCallGetGroups(IP string, customerId string, username string, password string ) []string {
 	// Create an HTTP client
 	client := &http.Client{}
 
 	// Create the request
-	url := "http://"+IP+"/XpertRestApi/api/MetaData/GetDepartments?CustomerId="+customerId
+	url := "http://"+IP+"/XpertRestApi/api/MetaData/GetGroups?CustomerId="+customerId
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
@@ -77,16 +76,16 @@ func RestCallGetDepartments(IP string, customerId string, username string, passw
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 
-	// Unmarshal the respnse JSON into an object
-	var departments Response
-	errUnmarshal := json.Unmarshal(body, &departments)
+	// Unmarshal the config JSON into a response struct object
+	var response Response
+	errUnmarshal := json.Unmarshal([]byte(body), &response)
 	if errUnmarshal != nil {
 	 	fmt.Println(errUnmarshal)
 		return []string{}
 	}
 
 	var jsonStrings []string // return data as string array
-	for _, asset := range departments.List {
+	for _, asset := range response.List {
 		jsonData, err2 := json.Marshal(asset)
 		if err2 != nil {
 			fmt.Println("Error:", err)

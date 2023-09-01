@@ -1,6 +1,6 @@
-# GetDepartments
+# GetGroups
 
-This activity retrieves departments associated with the given customer identification number.
+This activity retrieves all Groups for a given customer.
 
 ## Configuration
 
@@ -15,6 +15,6 @@ This activity retrieves departments associated with the given customer identific
 
 ### Output:
 
-| Name        | Type  | Description                     |
-| :---------- | :---- | :------------------------------ |
-| Departments | array | Array of strigified departments |
+| Name   | Type  | Description                               |
+| :----- | :---- | :---------------------------------------- |
+| Groups | array | Returns an array of the customer's groups |
