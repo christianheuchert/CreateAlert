@@ -1,4 +1,4 @@
-package getStaff
+package getStaffByBuilding
 
 import (
 	"testing"
@@ -20,7 +20,8 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin"}
+	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", Building: "4146"}
+	// Building: "Test Hospital" OR "4146"
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 

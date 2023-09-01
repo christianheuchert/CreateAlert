@@ -1,4 +1,4 @@
-package getStaff
+package getStaffByBuilding
 
 import (
 	"github.com/project-flogo/core/data/coerce"
@@ -9,6 +9,7 @@ type Input struct {
 	CustomerId string`md:"CustomerId,required"`
 	Username string `md:"Username,required"`
 	Password string `md:"Password,required"`
+	Building string `md:"Building, required"`
 }
 
 func (i *Input) FromMap(values map[string]interface{}) error {
@@ -23,6 +24,9 @@ func (i *Input) FromMap(values map[string]interface{}) error {
 
 	strVal, _ = coerce.ToString(values["Password"])
 	i.Password = strVal
+
+	strVal, _ = coerce.ToString(values["Building"])
+	i.Building = strVal
 	return nil
 }
 
@@ -32,6 +36,7 @@ func (i *Input) ToMap() map[string]interface{} {
 		"CustomerId": i.CustomerId,
 		"Username": i.Username,
 		"Password": i.Password,
+		"Building": i.Building,
 	}
 }
 
@@ -44,7 +49,6 @@ func (o *Output) FromMap(values map[string]interface{}) error {
 	if ok {
 		o.Staff = assetList
 	}
-
 	return nil
 }
 
@@ -54,10 +58,10 @@ func (o *Output) ToMap() map[string]interface{} {
 	}
 }
 
-type RestCallRestCallGetAllByDepartment struct {
-	List 				     []Asset `json:"List"`
+type RestCallGetAllStaffReponse struct {
+	List                     []Staff      `json:"List"` 
 }
-type Asset struct {
+type Staff struct {
 	Address                      string    `json:"Address"`
 	AlarisStatus                 string    `json:"AlarisStatus"`
 	AlertStatus                  string `json:"AlertStatus"`

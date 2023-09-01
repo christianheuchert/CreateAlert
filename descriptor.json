@@ -1,8 +1,8 @@
 {
-  "name": "Get Staff",
+  "name": "Get Staff By Building",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Staff",
+  "title": "A1: Get Staff By Building",
   "description": "Returns Array of Staff",
   "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "input": [
@@ -23,6 +23,11 @@
     },
     {
       "name": "Password",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Building",
       "type": "string",
       "required": true
     }

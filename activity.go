@@ -1,11 +1,12 @@
-package getStaff
+package getStaffByBuilding
 
 import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/project-flogo/core/activity"
 )
@@ -34,9 +35,9 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	staffData := RestCallGetAssets(input.IP, input.CustomerId, input.Username, input.Password)
+	Staff := RestCallGetStaffByBuilding(input.IP, input.CustomerId, input.Username, input.Password, input.Building)
 
-	output := &Output{Staff: staffData}
+	output := &Output{Staff: Staff}
 
 	// fmt.Println("Output: ", output.Staff)
 	// ctx.Logger().Info("Output: ", output)
@@ -49,16 +50,13 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-//http://52.45.17.177:802/XpertRestApi/api/MetaData/GetGroups?CustomerId=1
-func RestCallGetAssets(IP string, customerId string, username string, password string )[]string {
-
-	
-
+//RestCallGetStaffByBuilding ---------------------------------------------------- RestCallGetStaffByBuilding
+func RestCallGetStaffByBuilding(IP string, customerId string, uname string, pword string, building string) []string {
 	// Create an HTTP client
 	client := &http.Client{}
 
 	// Create the request
-	url := "http://"+IP+"/XpertRestApi/api/Staff/GetAll?CustomerId="+customerId+"&NumberOfRecords=10000"
+	url := "http://" + IP + "/XpertRestApi/api/Staff/GetAll?CustomerId=" + customerId+"&NumberOfRecords=10000"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
@@ -66,7 +64,7 @@ func RestCallGetAssets(IP string, customerId string, username string, password s
 	}
 
 	// Add basic authentication to the request header
-	auth := username + ":" + password
+	auth := uname + ":" + pword
 	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 	req.Header.Add("Authorization", basicAuth)
 
@@ -76,19 +74,33 @@ func RestCallGetAssets(IP string, customerId string, username string, password s
 		fmt.Println("Error making request:", err)
 		return []string{}
 	}
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
 
-	// Unmarshal the config JSON into a response struct object
-	var response RestCallRestCallGetAllByDepartment
-	errUnmarshal := json.Unmarshal([]byte(body), &response)
-	if errUnmarshal != nil {
-	 	fmt.Println(errUnmarshal)
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading response body:", err)
 		return []string{}
 	}
 
+	translatedData := &RestCallGetAllStaffReponse{}
+	json.Unmarshal(body, &translatedData)
+
+	
+	buildingId, _ := strconv.Atoi(building) // var checking if building is int Id
+	if (buildingId == 0){buildingId = -1}
+	listOfStaff := []Staff{}
+	for _, obj := range translatedData.List {
+		// Check if the targetValue is equal to either "CurrentBuildingName" or "CurrentBuildingID"
+		if obj.CurrentBuildingName == building || obj.CurrentBuildingID == buildingId{
+			// fmt.Println("found object with corresponding building: object id ", obj.ID)
+			listOfStaff = append(listOfStaff, obj)
+		}
+	}
+
 	var jsonStrings []string // return data as string array
-	for _, asset := range response.List {
+	for _, asset := range listOfStaff {
 		jsonData, err2 := json.Marshal(asset)
 		if err2 != nil {
 			fmt.Println("Error:", err)
@@ -97,5 +109,5 @@ func RestCallGetAssets(IP string, customerId string, username string, password s
 		jsonStrings = append(jsonStrings, string(jsonData))
 	}
 
-	return  jsonStrings
+	return jsonStrings
 }
