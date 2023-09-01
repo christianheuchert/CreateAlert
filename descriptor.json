@@ -1,10 +1,10 @@
 {
-  "name": "Airista Get Users",
+  "name": "sample-activity",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "Get Users",
-  "description": "Returns Array of Users",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetAllUsers",
+  "title": "Sample Activity",
+  "description": "Sample Activity",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/CreateAlert",
   "input": [
     {
       "name": "IP",
@@ -25,12 +25,17 @@
       "name": "Password",
       "type": "string",
       "required": true
+    },
+    {
+      "name": "AlertDisplayName",
+      "type": "string",
+      "required": true
     }
   ],
   "output": [
     {
-      "name": "Users",
-      "type": "string"
+      "name": "AlertBoolean",
+      "type": "boolean"
     }
   ]
 }

@@ -1,4 +1,4 @@
-package getDepartments
+package sample
 
 import (
 	"testing"
@@ -20,7 +20,7 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin"}
+	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", AlertDisplayName: "Flogo Test Alert"}
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 
@@ -28,9 +28,8 @@ func TestEval(t *testing.T) {
 	assert.True(t, done)
 	assert.Nil(t, err)
 
-	output := &Output{} 
+	output := &Output{}
 	err = tc.GetOutputObject(output)
 	assert.Nil(t, err)
-
-	assert.NotNil(t, output.Users)
+	assert.Equal(t, true, output.AlertBoolean)
 }
