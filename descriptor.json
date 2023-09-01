@@ -1,10 +1,10 @@
 {
-  "name": "Get Staff By Group",
+  "name": "Get Groups",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Staff By Group",
-  "description": "Returns JSON string of staff",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetStaffByGroup",
+  "title": "A1: Get Groups",
+  "description": "Returns Array of Groups",
+  "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "input": [
     {
       "name": "IP",
@@ -25,16 +25,11 @@
       "name": "Password",
       "type": "string",
       "required": true
-    },
-    {
-      "name": "GroupItem",
-      "type": "string",
-      "required": true
     }
   ],
   "output": [
     {
-      "name": "Staff",
+      "name": "Groups",
       "type": "array"
     }
   ]
