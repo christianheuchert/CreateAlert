@@ -1,10 +1,10 @@
-package getStaffByBuilding
+package getAllByDept
 
 import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -35,9 +35,9 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Staff := RestCallGetStaffByBuilding(input.IP, input.CustomerId, input.Username, input.Password, input.Building)
+	staffInDept := RestCallGetAllByDepartment(input.IP, input.CustomerId, input.Username, input.Password, input.DepartmentItem)
 
-	output := &Output{Staff: Staff}
+	output := &Output{Staff: staffInDept}
 
 	// fmt.Println("Output: ", output.Staff)
 	// ctx.Logger().Info("Output: ", output)
@@ -50,13 +50,34 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-//RestCallGetStaffByBuilding ---------------------------------------------------- RestCallGetStaffByBuilding
-func RestCallGetStaffByBuilding(IP string, customerId string, uname string, pword string, building string) []string {
+//RestCallGetStaffByDepartment ---------------------------------------------------- RestCallGetStaffByDepartment
+//http://52.45.17.177:802/XpertRestApi/api/MetaData/GetDepartments?CustomerId=1
+func RestCallGetAllByDepartment(IP string, customerId string, username string, password string, departmentItem string)[]string {
+	departmentId := ""
+
+	var dept Department
+	objectCheck := json.Unmarshal([]byte(departmentItem), &dept) // check if Department
+	_, intCheck := strconv.Atoi(departmentItem) // check if Int ID
+
+	if (objectCheck == nil){ // obj
+		departmentId = strconv.Itoa(dept.ID)
+	}else if(intCheck == nil){// int
+		departmentId = departmentItem
+	}else{ // name
+		Response := RestCallGetDepartments(IP, customerId, username, password)
+		for _, element := range Response.List{
+			if (element.Name == departmentItem){// find Department with Name and use Id
+				departmentId = strconv.Itoa(element.ID)
+				break
+			}
+		}
+	}
+
 	// Create an HTTP client
 	client := &http.Client{}
 
 	// Create the request
-	url := "http://" + IP + "/XpertRestApi/api/Staff/GetAll?CustomerId=" + customerId+"&NumberOfRecords=10000"
+	url := "http://"+IP+"/XpertRestApi/api/Staff/GetAllByDepartment?CustomerId="+customerId+"&DepartmentId="+departmentId+"&NumberOfRecords=10000"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
@@ -64,7 +85,7 @@ func RestCallGetStaffByBuilding(IP string, customerId string, uname string, pwor
 	}
 
 	// Add basic authentication to the request header
-	auth := uname + ":" + pword
+	auth := username + ":" + password
 	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 	req.Header.Add("Authorization", basicAuth)
 
@@ -74,33 +95,18 @@ func RestCallGetStaffByBuilding(IP string, customerId string, uname string, pwor
 		fmt.Println("Error making request:", err)
 		return []string{}
 	}
-
 	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
 
-	// Read the response body
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return []string{}
-	}
-
-	translatedData := &RestCallGetAllStaffReponse{}
-	json.Unmarshal(body, &translatedData)
-
-	
-	buildingId, _ := strconv.Atoi(building) // var checking if building is int Id
-	if (buildingId == 0){buildingId = -1}
-	listOfStaff := []Staff{}
-	for _, obj := range translatedData.List {
-		// Check if the targetValue is equal to either "CurrentBuildingName" or "CurrentBuildingID"
-		if obj.CurrentBuildingName == building || obj.CurrentBuildingID == buildingId{
-			// fmt.Println("found object with corresponding building: object id ", obj.ID)
-			listOfStaff = append(listOfStaff, obj)
-		}
+	// Unmarshal request into Asset json
+	var staffResponse GetAllByDepartmentResponse
+	errUnmarshal := json.Unmarshal(body, &staffResponse)
+	if errUnmarshal != nil {
+	 	fmt.Println(errUnmarshal)
 	}
 
 	var jsonStrings []string // return data as string array
-	for _, asset := range listOfStaff {
+	for _, asset := range staffResponse.List {
 		jsonData, err2 := json.Marshal(asset)
 		if err2 != nil {
 			fmt.Println("Error:", err)
@@ -110,4 +116,45 @@ func RestCallGetStaffByBuilding(IP string, customerId string, uname string, pwor
 	}
 
 	return jsonStrings
+}
+
+// Helper function to get ID of Department with Name Input
+func RestCallGetDepartments(IP string, customerId string, username string, password string )GetDepartmentsResponse{
+
+	//Declare response struct object
+	var response GetDepartmentsResponse
+
+	// Create an HTTP client
+	client := &http.Client{}
+
+	// Create the request
+	url := "http://"+IP+"/XpertRestApi/api/MetaData/GetDepartments?CustomerId="+customerId
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return response
+	}
+
+	// Add basic authentication to the request header
+	auth := username + ":" + password
+	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
+	req.Header.Add("Authorization", basicAuth)
+
+	// Perform the request
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println("Error making request:", err)
+		return response
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+
+	// Unmarshal the config JSON into an object
+	errUnmarshal := json.Unmarshal([]byte(body), &response)
+	if errUnmarshal != nil {
+	 	fmt.Println(errUnmarshal)
+		return response
+	}
+
+	return response
 }

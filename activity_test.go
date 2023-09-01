@@ -1,4 +1,4 @@
-package getStaffByBuilding
+package getAllByDept
 
 import (
 	"testing"
@@ -20,8 +20,22 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", Building: "4146"}
-	// Building: "Test Hospital" OR "4146"
+	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", DepartmentItem: "3098"}
+	// DepartmentItem options: "Administration " OR "3098"
+	// `{
+	// 	"CustomerId": 123,
+	// 	"DateCreated": "2023-08-09T12:34:56Z",
+	// 	"DateUpdated": "2023-08-09T13:45:21Z",
+	// 	"Description": "Example department",
+	// 	"EnableTenancy": true,
+	// 	"Name": "Engineering",
+	// 	"TenantId": "987654",
+	// 	"ElapsedTimeInMillseconds": 1234.567,
+	// 	"ErrorMessage": "Error occurred",
+	// 	"SuccessMessage": "Department created successfully",
+	// 	"HasError": false,
+	// 	"Id": 3098
+	// }`
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 

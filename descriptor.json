@@ -1,10 +1,10 @@
 {
-  "name": "Get Staff By Building",
+  "name": "Get Staff By Department",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Staff By Building",
+  "title": "A1: Get Staff By Department",
   "description": "Returns Array of Staff",
-  "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetStaffByDepartment",
   "input": [
     {
       "name": "IP",
@@ -27,7 +27,7 @@
       "required": true
     },
     {
-      "name": "Building",
+      "name": "DepartmentItem",
       "type": "string",
       "required": true
     }
