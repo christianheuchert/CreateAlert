@@ -2,7 +2,7 @@
   "name": "Create Alert",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "Create Alert",
+  "title": "A1: Create Alert",
   "description": "Create Alert on Sofia",
   "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/CreateAlert",
   "input": [
