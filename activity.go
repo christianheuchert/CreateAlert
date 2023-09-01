@@ -1,13 +1,11 @@
-package CreateAlert
+package getDepartments
 
 import (
-	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"time"
 
 	"github.com/project-flogo/core/activity"
 )
@@ -17,7 +15,6 @@ func init() {
 }
 
 var activityMd = activity.ToMetadata(&Input{}, &Output{})
-
 
 // Activity is an sample Activity that can be used as a base to create a custom activity
 type Activity struct {
@@ -37,16 +34,12 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	InsertAlertResponse := PostCallInsertEvent(input.IP, input.CustomerId, input.Username, input.Password, input.AlertDisplayName)
+	Users := RestCallGetUsers(input.IP, input.CustomerId, input.Username, input.Password)
 
-	output := &Output{}
-	if (InsertAlertResponse.ElapsedTimeInMillseconds!=0){
-		output.AlertBoolean = true
-	}
-	
-	// fmt.Println("Response: ", InsertAlertResponse)
+	output := &Output{Users: Users}
+
+	// fmt.Println("Output: ", output.Users)
 	// ctx.Logger().Info("Output: ", output)
-
 
 	err = ctx.SetOutputObject(output)
 	if err != nil {
@@ -56,63 +49,21 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-func PostCallInsertEvent(IP string, customerId string, uname string, pword string, dispName string) InsertEventResponse {
-	username := uname
-	password := pword
-
-	//Declare response struct object
-	var response InsertEventResponse
-	currentTime := time.Now().UTC()
-	timeFormat := "2006-01-02T15:04:05.999Z"
-	formattedTime := currentTime.Format(timeFormat)
-
+// http://52.45.17.177:802/XpertRestApi/api/MetaData/GetGroups?CustomerId=1
+func RestCallGetUsers(IP string, customerId string, uname string, pword string) []string {
 	// Create an HTTP client
 	client := &http.Client{}
 
-	event := EventModel{
-		AllowedValueRange: "Flogo Allowed Value Range",
-		Details: "Flogo Details",
-		DeviceID: 0,
-		DeviceLogID: 0,
-		DisplayName:  dispName,
-		EndDateTime: formattedTime,
-		IsAcknowledgementRequired: true,
-		ItemID: 0,
-		MaxValue: 0,
-		MinValue: 0,
-		PlanID: 0,
-		RuleName: "Flogo Rule Name",
-		RuleSetMajorVersion: 0,
-		RuleSetMinorVersion: 0,
-		RuleSetName: "Flogo Rule Set Name",
-		SeverityColor: "Flogo Severity Color",
-		SeverityIcon: "Flogo Severity Icon",
-		SiteID: "Flogo SiteId",
-		StartDateTime: formattedTime,
-		SystemName: "AREA_ALERT",
-		Type: "Flogo Type", 
-		UseCase: 0,
-		ViolationValue: "Flogo Violation Value",
-		DateUpdated: formattedTime,
-		Description: "Flogo Description",
-	}
-	payload, err := json.Marshal(event) // make event JSON bytes
-	if err != nil {
-        fmt.Println("Error marshaling JSON:", err)
-        return response
-    }
-
 	// Create the request
-	url := "http://" + IP + "/XpertRestApi/api/Events/InsertEvent?CustomerId=" + customerId
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payload))
+	url := "http://" + IP + "/XpertRestApi/api/Users/GetAll?CustomerId=" + customerId +"&NumberOfRecords=100000"
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
-		return response
+		return []string{}
 	}
-	req.Header.Set("Content-Type", "application/json") //Set the Content-Type header
 
 	// Add basic authentication to the request header
-	auth := username + ":" + password
+	auth := uname + ":" + pword
 	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 	req.Header.Add("Authorization", basicAuth)
 
@@ -120,24 +71,35 @@ func PostCallInsertEvent(IP string, customerId string, uname string, pword strin
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error making request:", err)
-		return response
+		return []string{}
 	}
-
 	defer resp.Body.Close()
 
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error reading response body:", err)
-		return response
+		return []string{}
 	}
-	
+
 	// Unmarshal the config JSON into an object
+	//Declare response struct object
+	var response GetAllUsersResponse
 	errUnmarshal := json.Unmarshal(body, &response)
 	if errUnmarshal != nil {
 	 	fmt.Println(errUnmarshal)
-		return response
+		return []string{}
 	}
 
-	return response
+	var jsonStrings []string // return data as string array
+	for _, asset := range response.List {
+		jsonData, err2 := json.Marshal(asset)
+		if err2 != nil {
+			fmt.Println("Error:", err)
+			return []string{}
+		}
+		jsonStrings = append(jsonStrings, string(jsonData))
+	}
+
+	return jsonStrings
 }

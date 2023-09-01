@@ -1,10 +1,10 @@
 {
-  "name": "Create Alert",
+  "name": "Airista Get Users",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Create Alert",
-  "description": "Create Alert on Sofia",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/CreateAlert",
+  "title": "A1: Get Users",
+  "description": "Returns Array of Users",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetAllUsers",
   "input": [
     {
       "name": "IP",
@@ -25,17 +25,12 @@
       "name": "Password",
       "type": "string",
       "required": true
-    },
-    {
-      "name": "AlertDisplayName",
-      "type": "string",
-      "required": true
     }
   ],
   "output": [
     {
-      "name": "AlertBoolean",
-      "type": "boolean"
+      "name": "Users",
+      "type": "array"
     }
   ]
 }
