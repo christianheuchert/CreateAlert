@@ -1,9 +1,9 @@
 {
-  "name": "Get Groups",
+  "name": "Get Staff",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Groups",
-  "description": "Returns Array of Groups",
+  "title": "A1: Get Staff",
+  "description": "Returns Array of Staff",
   "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "input": [
     {
@@ -29,7 +29,7 @@
   ],
   "output": [
     {
-      "name": "Groups",
+      "name": "Staff",
       "type": "array"
     }
   ]

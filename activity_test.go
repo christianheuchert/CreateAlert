@@ -1,4 +1,4 @@
-package getGroups
+package getStaff
 
 import (
 	"testing"
@@ -32,5 +32,5 @@ func TestEval(t *testing.T) {
 	err = tc.GetOutputObject(output)
 	assert.Nil(t, err)
 
-	assert.NotNil(t, output.Groups)
+	assert.NotNil(t, output.Staff)
 }
