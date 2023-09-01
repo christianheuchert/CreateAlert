@@ -1,6 +1,6 @@
-# Log
+# CreateAlert
 
-This activity allows you to write log messages.
+This activity creates an alert on Sofia
 
 ## Configuration
 

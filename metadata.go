@@ -1,4 +1,4 @@
-package sample
+package CreateAlert
 
 import "github.com/project-flogo/core/data/coerce"
 
