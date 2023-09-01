@@ -1,33 +1,37 @@
-# GetStaffByDepartment
+# GetStaffByGroup
 
-This activity retrieves staff for a specified department.
+This activity retrieves staff in the specified group
 
 ## Configuration
 
 ### Input:
 
-| Name           | Type   | Description                                                                                                        |
-| :------------- | :----- | :----------------------------------------------------------------------------------------------------------------- |
-| IP             | string | IP address followed by port. e.g. "32.41.13.112:322"                                                               |
-| CustomerId     | string | Customer unique identifier. e.g. "43"                                                                              |
-| Username       | string | Username used to log into Sofia. e.g. "adminUser"                                                                  |
-| Password       | string | Password used to log into Sofia. e.g. "adminPassword"                                                              |
-| DepartmentItem | string | Accepts department identificaiton number, department name, or a department item. e.g. "3091", "Administration", or |
+| Name       | Type   | Description                                                                                  |
+| :--------- | :----- | :------------------------------------------------------------------------------------------- |
+| IP         | string | IP address followed by port. e.g. "32.41.13.112:322"                                         |
+| CustomerId | string | Customer unique identifier. e.g. "43"                                                        |
+| Username   | string | Username used to log into Sofia. e.g. "adminUser"                                            |
+| Password   | string | Password used to log into Sofia. e.g. "adminPassword"                                        |
+| GroupItem  | string | Accepts group identificaiton number, group name, or a group item. e.g. "3091", "Surgery", or |
 
     `{
-     	"CustomerId": 123,
-     	"DateCreated": "2023-08-09T12:34:56Z",
-     	"DateUpdated": "2023-08-09T13:45:21Z",
-     	"Description": "Example department",
-     	"EnableTenancy": true,
-     	"Name": "Engineering",
-     	"TenantId": "987654",
-     	"ElapsedTimeInMillseconds": 1234.567,
-     	"ErrorMessage": "Error occurred",
-     	"SuccessMessage": "Department created successfully",
-     	"HasError": false,
-     	"Id": 3098
-     }`                                                                                                      |
+      "Icon": "assets\\icons\\792794ff-17db-46bc-b1fd-8110cf81f061.png",
+      "MultiAssign": false,
+      "CustomerId": 0,
+      "DateCreated": "2023-06-22T16:40:25.43",
+      "DateUpdated": "2023-06-22T16:40:25.43",
+      "Description": "",
+      "EnableTenancy": false,
+      "Name": "Acute Care",
+      "TenantId": "",
+      "ElapsedTimeInMillseconds": 0,
+      "ErrorMessage": "",
+      "SuccessMessage": "",
+      "HasError": false,
+      "Id": 5644
+    }`
+
+|
 
 ### Output:
 

@@ -1,4 +1,4 @@
-package getAllByDept
+package getAllByGroup
 
 import (
 	"encoding/base64"
@@ -35,9 +35,9 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	staffInDept := RestCallGetAllByDepartment(input.IP, input.CustomerId, input.Username, input.Password, input.DepartmentItem)
+	staffInGroup := RestCallGetAllByGroup(input.IP, input.CustomerId, input.Username, input.Password, input.GroupItem)
 
-	output := &Output{Staff: staffInDept}
+	output := &Output{Staff: staffInGroup}
 
 	// fmt.Println("Output: ", output.Staff)
 	// ctx.Logger().Info("Output: ", output)
@@ -50,24 +50,24 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-//RestCallGetStaffByDepartment ---------------------------------------------------- RestCallGetStaffByDepartment
-//http://52.45.17.177:802/XpertRestApi/api/MetaData/GetDepartments?CustomerId=1
-func RestCallGetAllByDepartment(IP string, customerId string, username string, password string, departmentItem string)[]string {
-	departmentId := ""
+//RestCallGetAllByGroup ---------------------------------------------------- RestCallGetAllByGroup
+//http://52.45.17.177:802/XpertRestApi/api/MetaData/GetAllByGroup?CustomerId=1
+func RestCallGetAllByGroup(IP string, customerId string, username string, password string, groupItem string)[]string{
+	groupId := ""
 
-	var dept Department
-	objectCheck := json.Unmarshal([]byte(departmentItem), &dept) // check if Department
-	_, intCheck := strconv.Atoi(departmentItem) // check if Int ID
+	var group Group
+	objectCheck := json.Unmarshal([]byte(groupItem), &group) // check if Group
+	_, intCheck := strconv.Atoi(groupItem) // check if Int ID
 
 	if (objectCheck == nil){ // obj
-		departmentId = strconv.Itoa(dept.ID)
+		groupId = strconv.Itoa(group.ID)
 	}else if(intCheck == nil){// int
-		departmentId = departmentItem
+		groupId = groupItem
 	}else{ // name
-		Response := RestCallGetDepartments(IP, customerId, username, password)
+		Response := RestCallGetGroups(IP, customerId, username, password)
 		for _, element := range Response.List{
-			if (element.Name == departmentItem){// find Department with Name and use Id
-				departmentId = strconv.Itoa(element.ID)
+			if (element.Name == groupItem){// find Group with Name and use Id
+				groupId = strconv.Itoa(element.ID)
 				break
 			}
 		}
@@ -77,7 +77,7 @@ func RestCallGetAllByDepartment(IP string, customerId string, username string, p
 	client := &http.Client{}
 
 	// Create the request
-	url := "http://"+IP+"/XpertRestApi/api/Staff/GetAllByDepartment?CustomerId="+customerId+"&DepartmentId="+departmentId+"&NumberOfRecords=10000"
+	url := "http://"+IP+"/XpertRestApi/api/Staff/GetAllByGroup?CustomerId="+customerId+"&GroupId="+groupId+"&NumberOfRecords=10000"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
@@ -98,8 +98,8 @@ func RestCallGetAllByDepartment(IP string, customerId string, username string, p
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 
-	// Unmarshal request into Asset json
-	var staffResponse GetAllByDepartmentResponse
+	// Unmarshal request into Staff struct
+	var staffResponse GetAllByGroupResponse
 	errUnmarshal := json.Unmarshal(body, &staffResponse)
 	if errUnmarshal != nil {
 	 	fmt.Println(errUnmarshal)
@@ -118,21 +118,20 @@ func RestCallGetAllByDepartment(IP string, customerId string, username string, p
 	return jsonStrings
 }
 
-// Helper function to get ID of Department with Name Input
-func RestCallGetDepartments(IP string, customerId string, username string, password string )GetDepartmentsResponse{
-
-	//Declare response struct object
-	var response GetDepartmentsResponse
-
+//RestCallGetGroups ---------------------------------------------------- RestCallGetGroups
+//http://52.45.17.177:802/XpertRestApi/api/MetaData/GetGroups?CustomerId=1
+func RestCallGetGroups(IP string, customerId string, username string, password string )GetGroupsResponse{
+	fmt.Println("rest call")
+	var responseArr GetGroupsResponse
 	// Create an HTTP client
 	client := &http.Client{}
 
 	// Create the request
-	url := "http://"+IP+"/XpertRestApi/api/MetaData/GetDepartments?CustomerId="+customerId
+	url := "http://"+IP+"/XpertRestApi/api/MetaData/GetGroups?CustomerId="+customerId
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
-		return response
+		return responseArr
 	}
 
 	// Add basic authentication to the request header
@@ -144,17 +143,17 @@ func RestCallGetDepartments(IP string, customerId string, username string, passw
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error making request:", err)
-		return response
+		return responseArr
 	}
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
 
-	// Unmarshal the config JSON into an object
-	errUnmarshal := json.Unmarshal([]byte(body), &response)
+	// Unmarshal the config JSON into an object	
+	errUnmarshal := json.Unmarshal([]byte(body), &responseArr)
 	if errUnmarshal != nil {
 	 	fmt.Println(errUnmarshal)
-		return response
+		return responseArr
 	}
 
-	return response
+	return responseArr
 }

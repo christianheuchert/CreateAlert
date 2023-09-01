@@ -1,4 +1,4 @@
-package getAllByDept
+package getAllByGroup
 
 import (
 	"testing"
@@ -20,22 +20,25 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", DepartmentItem: "3098"}
-	// DepartmentItem options: "Administration " OR "3098"
+	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", GroupItem: "5620"}
+	// GroupItem = "5620" OR "Assets" OR 
 	// `{
-	// 	"CustomerId": 123,
-	// 	"DateCreated": "2023-08-09T12:34:56Z",
-	// 	"DateUpdated": "2023-08-09T13:45:21Z",
-	// 	"Description": "Example department",
-	// 	"EnableTenancy": true,
-	// 	"Name": "Engineering",
-	// 	"TenantId": "987654",
-	// 	"ElapsedTimeInMillseconds": 1234.567,
-	// 	"ErrorMessage": "Error occurred",
-	// 	"SuccessMessage": "Department created successfully",
-	// 	"HasError": false,
-	// 	"Id": 3098
-	// }`
+    //   "Icon": "assets\\icons\\792794ff-17db-46bc-b1fd-8110cf81f061.png",
+    //   "MultiAssign": false,
+    //   "CustomerId": 0,
+    //   "DateCreated": "2023-06-22T16:40:25.43",
+    //   "DateUpdated": "2023-06-22T16:40:25.43",
+    //   "Description": "",
+    //   "EnableTenancy": false,
+    //   "Name": "Acute Care",
+    //   "TenantId": "",
+    //   "ElapsedTimeInMillseconds": 0,
+    //   "ErrorMessage": "",
+    //   "SuccessMessage": "",
+    //   "HasError": false,
+    //   "Id": 5644
+    // }`
+
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 

@@ -1,10 +1,10 @@
 {
-  "name": "Get Staff By Department",
+  "name": "Get Staff By Group",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Staff By Department",
-  "description": "Returns Array of Staff",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetStaffByDepartment",
+  "title": "A1: Get Staff By Group",
+  "description": "Returns JSON string of staff",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetStaffByGroup",
   "input": [
     {
       "name": "IP",
@@ -27,7 +27,7 @@
       "required": true
     },
     {
-      "name": "DepartmentItem",
+      "name": "GroupItem",
       "type": "string",
       "required": true
     }
