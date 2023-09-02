@@ -1,10 +1,10 @@
 {
-  "name": "Get Users",
+  "name": "sample-activity",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Users By Group",
-  "description": "Returns Array of Users",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetUsersByGroup",
+  "title": "Sample Activity",
+  "description": "Sample Activity",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/SendEmail",
   "input": [
     {
       "name": "IP",
@@ -27,15 +27,25 @@
       "required": true
     },
     {
-      "name": "Group",
+      "name": "UserEmailAddress",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "EmailSubject",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "EmailMessage",
       "type": "string",
       "required": true
     }
   ],
   "output": [
     {
-      "name": "Users",
-      "type": "array"
+      "name": "SentBoolean",
+      "type": "boolean"
     }
   ]
 }

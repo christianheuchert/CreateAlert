@@ -1,4 +1,4 @@
-package getAllUsersByGroup
+package SendEmail
 
 import (
 	"testing"
@@ -20,8 +20,7 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", Group: "5616"}
-	// Group: "5616" OR Group: "Medical"
+	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", UserEmailAddress: "christian.heuchert@airista.com", EmailSubject: "Flogo Subject", EmailMessage: "Flogo message"}
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 
@@ -32,6 +31,5 @@ func TestEval(t *testing.T) {
 	output := &Output{}
 	err = tc.GetOutputObject(output)
 	assert.Nil(t, err)
-
-	assert.NotNil(t, output.Users)
+	assert.Equal(t,true, output.SentBoolean)
 }

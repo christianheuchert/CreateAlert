@@ -1,4 +1,4 @@
-package getAllUsersByGroup
+package SendEmail
 
 import (
 	"encoding/base64"
@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
+	"net/url"
 
 	"github.com/project-flogo/core/activity"
 )
@@ -16,6 +16,7 @@ func init() {
 }
 
 var activityMd = activity.ToMetadata(&Input{}, &Output{})
+
 
 // Activity is an sample Activity that can be used as a base to create a custom activity
 type Activity struct {
@@ -35,13 +36,17 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Response := RestCallGetUsersByGroup(input.IP, input.CustomerId, input.Username, input.Password, input.Group)
+	SendEmailResponse := RestCallSendEmailAdvanced(input.IP, input.CustomerId, input.Username, input.Password, input.UserEmailAddress, input.EmailSubject, input.EmailMessage)
 
-	output := &Output{Users: Response}
 
-	// fmt.Println("Output: ", output.Users)
+	output := &Output{}
+	if (SendEmailResponse.ElapsedTimeInMillseconds!=0){
+		output.SentBoolean = true
+	}
+	// fmt.Println("Output: ", output)
 	// ctx.Logger().Info("Output: ", output)
 
+	
 	err = ctx.SetOutputObject(output)
 	if err != nil {
 		return true, err
@@ -50,28 +55,30 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-func RestCallGetUsersByGroup(IP string, customerId string, uname string, pword string, group string) []string {
+func RestCallSendEmailAdvanced(IP string, customerId string, username string, password string, userEmail string, emailSubject string, emailMessage string )SendEmailResponse{
+
+	//Declare response struct object
+	var response SendEmailResponse
+	// query escape text items
+	cleanUserEmail := url.QueryEscape(userEmail)
+	cleanEmailSubject := url.QueryEscape(emailSubject)
+	cleanEmailMessage := url.QueryEscape(emailMessage)
 
 	// Create an HTTP client
 	client := &http.Client{}
 
-	var groupValue interface{}
-	if intValue, err := strconv.Atoi(group); err == nil {
-		groupValue = intValue
-	} else {
-		groupValue = group
-	}
-
 	// Create the request
-	url := "http://" + IP + "/XpertRestApi/api/Users/GetAll?CustomerId=" + customerId
-	req, err := http.NewRequest("GET", url, nil)
+	url := "http://"+IP+"/XpertRestApi/api/Users/SendEmailAdvanced?userEmailAddress=" + cleanUserEmail + "&subject=" + cleanEmailSubject + 
+	"&emailMessage=" + cleanEmailMessage + "&CustomerId=" + customerId
+	
+	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
-		return []string{}
+		return response
 	}
 
 	// Add basic authentication to the request header
-	auth := uname + ":" + pword
+	auth := username + ":" + password
 	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 	req.Header.Add("Authorization", basicAuth)
 
@@ -79,41 +86,17 @@ func RestCallGetUsersByGroup(IP string, customerId string, uname string, pword s
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error making request:", err)
-		return []string{}
+		return response
 	}
-
 	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
 
-	// Read the response body
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("Error reading response body:", err)
-		return []string{}
+	// Unmarshal the config JSON into an object
+	errUnmarshal := json.Unmarshal(body, &response)
+	if errUnmarshal != nil {
+	 	fmt.Println(errUnmarshal)
+		return response
 	}
 
-	translatedData := &GetAllUsersResponse{}
-	json.Unmarshal([]byte(string(body)), &translatedData)
-
-	listOfUsers := []User{}
-
-	for _, obj := range translatedData.List {
-		if len(obj.AssociatedGroups) > 0 {
-			for _, grp := range obj.AssociatedGroups {
-				if grp.ID == groupValue || grp.Name == groupValue {
-					listOfUsers = append(listOfUsers, obj)
-				}
-			}
-		}
-	}
-
-	var jsonStrings []string // return data as string array
-	for _, asset := range listOfUsers {
-		jsonData, err2 := json.Marshal(asset)
-		if err2 != nil {
-			fmt.Println("Error:", err)
-			return []string{}
-		}
-		jsonStrings = append(jsonStrings, string(jsonData))
-	}
-	return jsonStrings
+	return response
 }
