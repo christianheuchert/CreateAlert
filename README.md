@@ -1,6 +1,6 @@
-# GetGroups
+# GetStaffByZone
 
-This activity retrieves all Groups for a given customer.
+This activity retrieves staff in a specific zone.
 
 ## Configuration
 
@@ -15,6 +15,6 @@ This activity retrieves all Groups for a given customer.
 
 ### Output:
 
-| Name   | Type  | Description                               |
-| :----- | :---- | :---------------------------------------- |
-| Groups | array | Returns an array of the customer's groups |
+| Name  | Type  | Description                           |
+| :---- | :---- | :------------------------------------ |
+| Staff | array | Returns an array of stringified staff |

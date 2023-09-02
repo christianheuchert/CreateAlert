@@ -1,4 +1,4 @@
-package getGroups
+package getStaffByZone
 
 import (
 	"encoding/base64"
@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/project-flogo/core/activity"
 )
@@ -34,11 +35,11 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Groups := RestCallGetGroups(input.IP, input.CustomerId, input.Username, input.Password)
+	Staff := RestCallGetStaffByZone(input.IP, input.CustomerId, input.Username, input.Password, input.Zone)
 
-	output := &Output{Groups: Groups}
+	output := &Output{Staff: Staff}
 
-	// fmt.Println("Output: ", output.Groups)
+	// fmt.Println("Output: ", output.Staff)
 	// ctx.Logger().Info("Output: ", output)
 
 	err = ctx.SetOutputObject(output)
@@ -49,13 +50,17 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-//http://52.45.17.177:802/XpertRestApi/api/MetaData/GetGroups?CustomerId=1
-func RestCallGetGroups(IP string, customerId string, username string, password string ) []string {
+// RestCallGetStaffByZoneGroup("52.45.17.177:802", 2047, "afadmin", "admin", 12091)
+func RestCallGetStaffByZone(IP string, customerId string, uname string, pword string, zone string) []string {
+	username := uname
+	password := pword
+	ListOfObjsWithZone := []Staff{}
+
 	// Create an HTTP client
 	client := &http.Client{}
 
-	// Create the request
-	url := "http://"+IP+"/XpertRestApi/api/MetaData/GetGroups?CustomerId="+customerId
+	// Create the request ADDED &NumberOfRecords=10000. NOT GOOD
+	url := "http://" + IP + "/XpertRestApi/api/Staff/GetAll?CustomerId=" + (customerId)+"&NumberOfRecords=10000"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
@@ -73,19 +78,38 @@ func RestCallGetGroups(IP string, customerId string, username string, password s
 		fmt.Println("Error making request:", err)
 		return []string{}
 	}
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
 
-	// Unmarshal the config JSON into a response struct object
-	var response Response
-	errUnmarshal := json.Unmarshal([]byte(body), &response)
-	if errUnmarshal != nil {
-	 	fmt.Println(errUnmarshal)
+	defer resp.Body.Close()
+
+	// Read the response body
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading response body:", err)
 		return []string{}
 	}
 
+	translatedData := &GetAllStaffReponse{}
+	json.Unmarshal(body, &translatedData)
+
+	ZoneId, _ := strconv.Atoi(zone) // var checking if building is int Id, if not, set to -1
+	if (ZoneId == 0){ZoneId = -1} 
+	for _, obj := range translatedData.List {
+
+		var zones []Zones
+		err := json.Unmarshal([]byte(obj.CurrentZones), &zones)
+		if err != nil {
+			continue
+		} else if len(zones) == 0 {
+			continue
+		}
+		
+		if zones[0].ZoneID == ZoneId || zones[0].ZoneName == zone {
+			ListOfObjsWithZone = append(ListOfObjsWithZone, obj)
+		}
+	}
+
 	var jsonStrings []string // return data as string array
-	for _, asset := range response.List {
+	for _, asset := range ListOfObjsWithZone {
 		jsonData, err2 := json.Marshal(asset)
 		if err2 != nil {
 			fmt.Println("Error:", err)
@@ -93,6 +117,7 @@ func RestCallGetGroups(IP string, customerId string, username string, password s
 		}
 		jsonStrings = append(jsonStrings, string(jsonData))
 	}
+
 
 	return jsonStrings
 }

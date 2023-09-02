@@ -1,10 +1,10 @@
 {
-  "name": "Get Groups",
+  "name": "Get Staff By Zone",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Groups",
-  "description": "Returns Array of Groups",
-  "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
+  "title": "A1: Get Staff By Zone",
+  "description": "Returns Array of Staff",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetStaffByZone",
   "input": [
     {
       "name": "IP",
@@ -25,11 +25,16 @@
       "name": "Password",
       "type": "string",
       "required": true
+    },
+    {
+      "name": "Zone",
+      "type": "string",
+      "required": true
     }
   ],
   "output": [
     {
-      "name": "Groups",
+      "name": "Staff",
       "type": "array"
     }
   ]
