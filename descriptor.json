@@ -1,9 +1,9 @@
 {
-  "name": "sample-activity",
+  "name": "Send Email",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "Sample Activity",
-  "description": "Sample Activity",
+  "title": "A1: Send Email",
+  "description": "Sends email to an email address",
   "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/SendEmail",
   "input": [
     {
