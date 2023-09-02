@@ -1,10 +1,13 @@
-package SendEmail
+package SendMessageToAssets
 
 import (
 	"encoding/base64"
 	"encoding/json"
+	"strconv"
+
+	// "encoding/json"
 	"fmt"
-	"io"
+	// "io"
 	"net/http"
 	"net/url"
 
@@ -16,7 +19,6 @@ func init() {
 }
 
 var activityMd = activity.ToMetadata(&Input{}, &Output{})
-
 
 // Activity is an sample Activity that can be used as a base to create a custom activity
 type Activity struct {
@@ -36,17 +38,13 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	SendEmailResponse := RestCallSendEmailAdvanced(input.IP, input.CustomerId, input.Username, input.Password, input.UserEmailAddress, input.EmailSubject, input.EmailMessage)
+	Status := SendMessageToAssets(input.IP, input.CustomerId, input.Username, input.Password, input.StaffIdList, input.Message)
 
+	output := &Output{Status: Status}
 
-	output := &Output{}
-	if (SendEmailResponse.ElapsedTimeInMillseconds!=0){
-		output.SentBoolean = true
-	}
-	// fmt.Println("Output: ", output)
+	// fmt.Println("Output: ", output.Status)
 	// ctx.Logger().Info("Output: ", output)
 
-	
 	err = ctx.SetOutputObject(output)
 	if err != nil {
 		return true, err
@@ -55,27 +53,32 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-func RestCallSendEmailAdvanced(IP string, customerId string, username string, password string, userEmail string, emailSubject string, emailMessage string )SendEmailResponse{
+func SendMessageToAssets(IP string, CustomerId string, username string, password string, StaffIdList string, Message string)string{
 
-	//Declare response struct object
-	var response SendEmailResponse
-	// query escape text items
-	cleanUserEmail := url.QueryEscape(userEmail)
-	cleanEmailSubject := url.QueryEscape(emailSubject)
-	cleanEmailMessage := url.QueryEscape(emailMessage)
+	// filtering url string's special characters
+	FilteredMessage := url.QueryEscape(Message)
 
 	// Create an HTTP client
 	client := &http.Client{}
 
+	var asset Asset
+	assetCheck := json.Unmarshal([]byte(StaffIdList), &asset) // check if Asset Obj
+	if (assetCheck == nil){ // if no error puting into asset struct, then obj
+		StaffIdList = strconv.Itoa(asset.ID)
+	}
+
 	// Create the request
-	url := "http://"+IP+"/XpertRestApi/api/Users/SendEmailAdvanced?userEmailAddress=" + cleanUserEmail + "&subject=" + cleanEmailSubject + 
-	"&emailMessage=" + cleanEmailMessage + "&CustomerId=" + customerId
-	
+	url := "http://" + IP + "/XpertRestApi/api/Device/DisplayMessageOnTag?" +
+		"StaffIdList=" + StaffIdList + "&" +
+		"Message=" + FilteredMessage + "&" +
+		"CustomerId=" + CustomerId
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
-		return response
+		return err.Error()
 	}
+
+	req.Header.Add("Content-Type", "application/json")
 
 	// Add basic authentication to the request header
 	auth := username + ":" + password
@@ -86,17 +89,14 @@ func RestCallSendEmailAdvanced(IP string, customerId string, username string, pa
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error making request:", err)
-		return response
+		return err.Error()
 	}
 	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
 
-	// Unmarshal the config JSON into an object
-	errUnmarshal := json.Unmarshal(body, &response)
-	if errUnmarshal != nil {
-	 	fmt.Println(errUnmarshal)
-		return response
+	returnedStatus := "false"
+	if(resp.Status == "200 OK"){
+		returnedStatus = "true"
 	}
 
-	return response
+	return returnedStatus
 }

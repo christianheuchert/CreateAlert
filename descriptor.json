@@ -1,10 +1,10 @@
 {
-  "name": "Send Email",
+  "name": "Send Message To Assets",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Send Email",
-  "description": "Sends email to an email address",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/SendEmail",
+  "title": "A1: Send Message To Assets",
+  "description": "Sends message to staffs devices, on success returns true, else false",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/SendMessageToAssets",
   "input": [
     {
       "name": "IP",
@@ -27,25 +27,20 @@
       "required": true
     },
     {
-      "name": "UserEmailAddress",
+      "name": "StaffIdList",
       "type": "string",
       "required": true
     },
     {
-      "name": "EmailSubject",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "EmailMessage",
+      "name": "Message",
       "type": "string",
       "required": true
     }
   ],
   "output": [
     {
-      "name": "SentBoolean",
-      "type": "boolean"
+      "name": "Status",
+      "type": "string"
     }
   ]
 }
