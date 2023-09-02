@@ -1,4 +1,4 @@
-package getAllUsersByDept
+package getAllUsersByGroup
 
 import (
 	"github.com/project-flogo/core/data/coerce"
@@ -9,7 +9,7 @@ type Input struct {
 	CustomerId string `md:"CustomerId,required"`
 	Username   string `md:"Username,required"`
 	Password   string `md:"Password,required"`
-	Department string `md:"Department,required"`
+	Group      string `md:"Group,required"`
 }
 
 func (i *Input) FromMap(values map[string]interface{}) error {
@@ -25,8 +25,8 @@ func (i *Input) FromMap(values map[string]interface{}) error {
 	strVal, _ = coerce.ToString(values["Password"])
 	i.Password = strVal
 
-	strVal, _ = coerce.ToString(values["Department"])
-	i.Department = strVal
+	strVal, _ = coerce.ToString(values["Group"])
+	i.Group = strVal
 	return nil
 }
 
@@ -36,7 +36,7 @@ func (i *Input) ToMap() map[string]interface{} {
 		"CustomerId": i.CustomerId,
 		"Username":   i.Username,
 		"Password":   i.Password,
-		"Department": i.Department,
+		"Group":      i.Group,
 	}
 }
 
@@ -142,3 +142,4 @@ type Associated struct {
 	Icon                     *string `json:"Icon,omitempty"`
 	MultiAssign              *bool   `json:"MultiAssign,omitempty"`
 }
+

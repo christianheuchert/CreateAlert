@@ -1,4 +1,4 @@
-package getAllUsersByDept
+package getAllUsersByGroup
 
 import (
 	"encoding/base64"
@@ -35,7 +35,7 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Response := RestCallGetUsersByDepartment(input.IP, input.CustomerId, input.Username, input.Password, input.Department)
+	Response := RestCallGetUsersByGroup(input.IP, input.CustomerId, input.Username, input.Password, input.Group)
 
 	output := &Output{Users: Response}
 
@@ -50,16 +50,17 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-func RestCallGetUsersByDepartment(IP string, customerId string, uname string, pword string, department string) []string {
-	var departmentValue interface{}
-	if intValue, err := strconv.Atoi(department); err == nil {
-		departmentValue = intValue
-	} else {
-		departmentValue = department
-	}
+func RestCallGetUsersByGroup(IP string, customerId string, uname string, pword string, group string) []string {
 
 	// Create an HTTP client
 	client := &http.Client{}
+
+	var groupValue interface{}
+	if intValue, err := strconv.Atoi(group); err == nil {
+		groupValue = intValue
+	} else {
+		groupValue = group
+	}
 
 	// Create the request
 	url := "http://" + IP + "/XpertRestApi/api/Users/GetAll?CustomerId=" + customerId
@@ -91,22 +92,22 @@ func RestCallGetUsersByDepartment(IP string, customerId string, uname string, pw
 	}
 
 	translatedData := &GetAllUsersResponse{}
-	json.Unmarshal(body, &translatedData)
+	json.Unmarshal([]byte(string(body)), &translatedData)
 
-	usersInDepartment := []User{}
-	// check users and associated departments for match
+	listOfUsers := []User{}
+
 	for _, obj := range translatedData.List {
-		if len(obj.AssociatedDepts) > 0 {
-			for _, dept := range obj.AssociatedDepts {
-				if dept.ID == departmentValue || dept.Name == departmentValue {
-					usersInDepartment = append(usersInDepartment, obj)
+		if len(obj.AssociatedGroups) > 0 {
+			for _, grp := range obj.AssociatedGroups {
+				if grp.ID == groupValue || grp.Name == groupValue {
+					listOfUsers = append(listOfUsers, obj)
 				}
 			}
 		}
 	}
 
 	var jsonStrings []string // return data as string array
-	for _, asset := range usersInDepartment {
+	for _, asset := range listOfUsers {
 		jsonData, err2 := json.Marshal(asset)
 		if err2 != nil {
 			fmt.Println("Error:", err)
@@ -114,6 +115,5 @@ func RestCallGetUsersByDepartment(IP string, customerId string, uname string, pw
 		}
 		jsonStrings = append(jsonStrings, string(jsonData))
 	}
-
 	return jsonStrings
 }

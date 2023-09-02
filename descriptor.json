@@ -2,9 +2,9 @@
   "name": "Get Users",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Get Users By Department",
+  "title": "A1: Get Users By Group",
   "description": "Returns Array of Users",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetUsersByDepartment",
+  "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
   "input": [
     {
       "name": "IP",
@@ -27,7 +27,7 @@
       "required": true
     },
     {
-      "name": "Department",
+      "name": "Group",
       "type": "string",
       "required": true
     }

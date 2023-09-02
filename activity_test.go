@@ -1,4 +1,4 @@
-package getAllUsersByDept
+package getAllUsersByGroup
 
 import (
 	"testing"
@@ -20,8 +20,8 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", Department: "Sales"}
-	// Department: "Sales" OR Department: "2013"
+	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", Group: "5616"}
+	// Group: "5616" OR Group: "Medical"
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 
