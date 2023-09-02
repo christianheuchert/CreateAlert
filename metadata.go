@@ -1,4 +1,4 @@
-package SendMessageToAssets
+package SendPriorityMessageToAssets
 
 import (
 	"github.com/project-flogo/core/data/coerce"
@@ -31,6 +31,7 @@ func (i *Input) FromMap(values map[string]interface{}) error {
 
 	strVal, _ = coerce.ToString(values["Message"])
 	i.Message = strVal
+
 	return nil
 }
 

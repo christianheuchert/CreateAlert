@@ -1,4 +1,4 @@
-package SendMessageToAssets
+package SendPriorityMessageToAssets
 
 import (
 	"testing"
@@ -20,8 +20,8 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", StaffIdList: `{"Id": 9064}`, Message: "Test Single-Message 5"}
-	// StaffIdList "9064" OR "9064,37685" OR "{ID: 9064}"
+	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", StaffIdList: "9064,37685", Message: "Test Priority-Multi-Message 4"}
+	// StaffIdList "9064" OR "9064,37685" OR "{"Id": 9064}"
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 

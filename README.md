@@ -1,6 +1,6 @@
-# SendMessageToAssets
+# SendPriorityMessageToAssets
 
-This activity sends a message to a specified asset.
+This activity sends a priority message to a specified asset.
 
 ## Configuration
 
@@ -14,3 +14,9 @@ This activity sends a message to a specified asset.
 | Password    | string | Password used to log into Sofia. e.g. "adminPassword"                                                         |
 | StaffIdList | string | Takes a comma delimited list, a single id, or staff object. e.g. "234, 1234, 15" OR "1023", Or "{"Id": 9064}" |
 | Message     | string | Message to be sent to asset(s). e.g. "Report to nearest checkpoint"                                           |
+
+### Output:
+
+| Name   | Type    | Description                       |
+| :----- | :------ | :-------------------------------- |
+| Status | boolean | True if message sent successfully |

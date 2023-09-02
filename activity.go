@@ -1,11 +1,10 @@
-package SendMessageToAssets
+package SendPriorityMessageToAssets
 
 import (
 	"encoding/base64"
 	"encoding/json"
 	"strconv"
 
-	// "encoding/json"
 	"fmt"
 	// "io"
 	"net/http"
@@ -38,7 +37,7 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Status := SendMessageToAssets(input.IP, input.CustomerId, input.Username, input.Password, input.StaffIdList, input.Message)
+	Status := SendPriorityMessageToAssets(input.IP, input.CustomerId, input.Username, input.Password, input.StaffIdList, input.Message)
 
 	output := &Output{Status: Status}
 
@@ -53,7 +52,7 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-func SendMessageToAssets(IP string, CustomerId string, username string, password string, StaffIdList string, Message string)string{
+func SendPriorityMessageToAssets(IP string, CustomerId string, username string, password string, StaffIdList string, Message string)string{
 
 	// filtering url string's special characters
 	FilteredMessage := url.QueryEscape(Message)
@@ -67,10 +66,20 @@ func SendMessageToAssets(IP string, CustomerId string, username string, password
 		StaffIdList = strconv.Itoa(asset.ID)
 	}
 
+	//Hardcoded variables
+	MessagePriority := "1" //high
+	MessageOptions := "00000110" // Two-Tone
+	MessageId := "1"
+	MessageExpirationSeconds := "0" // never
+
 	// Create the request
-	url := "http://" + IP + "/XpertRestApi/api/Device/DisplayMessageOnTag?" +
+	url := "http://" + IP + "/XpertRestApi/api/Device/DisplayPriorityMessageOnTagNotif?" +
 		"StaffIdList=" + StaffIdList + "&" +
 		"Message=" + FilteredMessage + "&" +
+		"MessageId=" + MessageId + "&" +
+		"MessagePriority=" + MessagePriority + "&" +
+		"MessageOptions=" + MessageOptions + "&" +
+		"MessageExpirationSeconds=" + MessageExpirationSeconds + "&" +
 		"CustomerId=" + CustomerId
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
