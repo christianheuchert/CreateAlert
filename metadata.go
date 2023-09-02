@@ -1,15 +1,15 @@
-package getStaffByZone
+package getAllUsersByDept
 
 import (
 	"github.com/project-flogo/core/data/coerce"
 )
 
 type Input struct {
-	IP string  `md:"IP,required"`
-	CustomerId string`md:"CustomerId,required"`
-	Username string `md:"Username,required"`
-	Password string `md:"Password,required"`
-	Zone string `md:"Zone,required"`
+	IP         string `md:"IP,required"`
+	CustomerId string `md:"CustomerId,required"`
+	Username   string `md:"Username,required"`
+	Password   string `md:"Password,required"`
+	Department string `md:"Department,required"`
 }
 
 func (i *Input) FromMap(values map[string]interface{}) error {
@@ -25,29 +25,29 @@ func (i *Input) FromMap(values map[string]interface{}) error {
 	strVal, _ = coerce.ToString(values["Password"])
 	i.Password = strVal
 
-	strVal, _ = coerce.ToString(values["Zone"])
-	i.Zone = strVal
+	strVal, _ = coerce.ToString(values["Department"])
+	i.Department = strVal
 	return nil
 }
 
 func (i *Input) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"IP": i.IP,
+		"IP":         i.IP,
 		"CustomerId": i.CustomerId,
-		"Username": i.Username,
-		"Password": i.Password,
-		"Zone": i.Zone,
+		"Username":   i.Username,
+		"Password":   i.Password,
+		"Department": i.Department,
 	}
 }
 
 type Output struct {
-	Staff []string `md:"Staff"`
+	Users []string `md:"Users"`
 }
 
 func (o *Output) FromMap(values map[string]interface{}) error {
-	assetList, ok:= (values["Staff"]).([]string) // type assertion
+	UsersList, ok := (values["Users"]).([]string) // type assertion
 	if ok {
-		o.Staff = assetList
+		o.Users = UsersList
 	}
 
 	return nil
@@ -55,95 +55,90 @@ func (o *Output) FromMap(values map[string]interface{}) error {
 
 func (o *Output) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"Staff":    o.Staff,
+		"Users": o.Users,
 	}
 }
 
-type Staff struct {
-	Address                      string    `json:"Address"`
-	AlarisStatus                 string    `json:"AlarisStatus"`
-	AlertStatus                  string `json:"AlertStatus"`
-	AssociatedDevices            []interface{}  `json:"AssociatedDevices"`
-	BatteryLevel                 float64    `json:"BatteryLevel"`
-	BedStatus                    string `json:"BedStatus"`
-	CurrentBuildingID            int    `json:"CurrentBuildingID"`
-	CurrentBuildingName          string `json:"CurrentBuildingName"`
-	CurrentSiteName              string `json:"CurrentSiteName"`
-	CurrentFloorName             string `json:"CurrentFloorName"`
-	CurrentMapID                 int    `json:"CurrentMapId"`
-	CurrentModelID               int    `json:"CurrentModelId"`
-	CurrentSiteID                int    `json:"CurrentSiteID"`
-	CurrentTimestamp             string `json:"CurrentTimestamp"`
-	CurrentX                     float64    `json:"CurrentX"`
-	CurrentY                     float64    `json:"CurrentY"`
-	CurrentZones                 string `json:"CurrentZones"`
-	DepartmentID                 int    `json:"DepartmentID"`
-	DepartmentName               string `json:"DepartmentName"`
-	DeviceID                     int    `json:"DeviceID"`
-	DeviceLogID                  int    `json:"DeviceLogID"`
-	DeviceName                   string `json:"DeviceName"`
-	Email                        string `json:"Email"`
-	EnableAlerts                 bool   `json:"EnableAlerts"`
-	EnableHygiene                bool   `json:"EnableHygiene"`
-	EnableSDCT                   bool   `json:"EnableSDCT"`
-	EventCountAcknowledged       int    `json:"EventCountAcknowledged"`
-	EventCountClosed             int    `json:"EventCountClosed"`
-	EventCountNew                int    `json:"EventCountNew"`
-	EventCountOpen               int    `json:"EventCountOpen"`
-	FromLDAP                     bool   `json:"FromLDAP"`
-	GroupID                      int    `json:"GroupID"`
-	GroupName                    string `json:"GroupName"`
-	HealthStatus                 string `json:"HealthStatus"`
-	Icon                         string `json:"Icon"`
-	ImageData                    string `json:"ImageData"`
-	ImageType                    string `json:"ImageType"`
-	IsTestMode                   bool   `json:"IsTestMode"`
-	OldTamper                    bool   `json:"OldTamper"`
-	OldMotion                    bool   `json:"OldMotion"`
-	Latitude                     float64    `json:"Latitude"`
-	Longitude                    float64    `json:"Longitude"`
-	LocationUpdated              string `json:"LocationUpdated"`
-	ModelName                    string `json:"ModelName"`
-	OldBuildingID                int    `json:"OldBuildingID"`
-	OldMapID                     int    `json:"OldMapId"`
-	OldModelID                   int    `json:"OldModelId"`
-	OldSiteID                    int    `json:"OldSiteID"`
-	OldLocationUpdated           string `json:"OldLocationUpdated"`
-	OldX                         float64    `json:"OldX"`
-	OldY                         float64    `json:"OldY"`
-	OldZones                     string `json:"OldZones"`
-	PendingDepartmentDateUpdated string `json:"PendingDepartmentDateUpdated"`
-	PendingDepartmentID          int    `json:"PendingDepartmentId"`
-	PhoneNumber                  string `json:"PhoneNumber"`
-	Portrait                     string `json:"Portrait"`
-	StaffID                      string `json:"StaffID"`
-	StaffSettings                string    `json:"StaffSettings"`
-	Temperature                  string `json:"Temperature"`
-	UseCases                     []string  `json:"UseCases"`
-	MultiAssign                  bool   `json:"MultiAssign"`
-	AssocItemID                  int    `json:"AssocItemID"`
-	PendingDepartmentName        string    `json:"PendingDepartmentName"`
-	AssocItemName                string    `json:"AssocItemName"`
-	CustomerID                   int    `json:"CustomerId"`
-	DateCreated                  string `json:"DateCreated"`
-	DateUpdated                  string `json:"DateUpdated"`
-	Description                  string `json:"Description"`
-	EnableTenancy                bool   `json:"EnableTenancy"`
-	Name                         string `json:"Name"`
-	TenantID                     string `json:"TenantId"`
-	ElapsedTimeInMillseconds     float64    `json:"ElapsedTimeInMillseconds"`
-	ErrorMessage                 string `json:"ErrorMessage"`
-	SuccessMessage               string `json:"SuccessMessage"`
-	HasError                     bool   `json:"HasError"`
-	ID                           int    `json:"Id"`
-} 
-
-type GetAllStaffReponse struct {
-	List                     []Staff      `json:"List"` //
+type GetAllUsersResponse struct {
+	List []User `json:"List"`
 }
 
-type Zones struct {
-	ZoneID   int    `json:"ZoneID"`
-	ZoneName string `json:"ZoneName"`
-	ZoneType string `json:"ZoneType"`
+type User struct {
+	AccountExpirationDate      string        `json:"AccountExpirationDate"`
+	AccountLockedOut           bool          `json:"AccountLockedOut"`
+	AccountLockedOutDateTime   string        `json:"AccountLockedOutDateTime"`
+	Address1                   string        `json:"Address1"`
+	Address2                   string        `json:"Address2"`
+	AssociatedDepts            []Associated  `json:"AssociatedDepts"`
+	AssociatedGroups           []Associated  `json:"AssociatedGroups"`
+	AuditEnabled               bool          `json:"AuditEnabled"`
+	AuthorizationCode          string        `json:"AuthorizationCode"`
+	City                       string        `json:"City"`
+	CurrentPassword            string        `json:"CurrentPassword"`
+	Domain                     string        `json:"Domain"`
+	Email                      string        `json:"Email"`
+	EnableAccess               bool          `json:"EnableAccess"`
+	EnableAccountExpiration    bool          `json:"EnableAccountExpiration"`
+	EnableNotifications        bool          `json:"EnableNotifications"`
+	Fax                        string        `json:"Fax"`
+	FirstLoginDateTime         string        `json:"FirstLoginDateTime"`
+	FirstName                  string        `json:"FirstName"`
+	FullName                   string        `json:"FullName"`
+	FromLDAP                   bool          `json:"FromLDAP"`
+	IsDeleted                  bool          `json:"IsDeleted"`
+	IsProtectedUser            bool          `json:"IsProtectedUser"`
+	IsSuperUser                bool          `json:"IsSuperUser"`
+	LanguageID                 int           `json:"LanguageId"`
+	LastLoginDateTime          string        `json:"LastLoginDateTime"`
+	LastAgreedToEULADateTime   string        `json:"LastAgreedToEULADateTime"`
+	LastName                   string        `json:"LastName"`
+	Password                   string        `json:"Password"`
+	PasswordExpirationDateTime string        `json:"PasswordExpirationDateTime"`
+	PasswordHash               string        `json:"PasswordHash"`
+	Phone                      string        `json:"Phone"`
+	PreferencesXML             string        `json:"PreferencesXML"`
+	ResetPasswordOnLogin       bool          `json:"ResetPasswordOnLogin"`
+	State                      string        `json:"State"`
+	Status                     string        `json:"Status"`
+	TimeZoneID                 int           `json:"TimeZoneId"`
+	UserDefine1                string        `json:"UserDefine1"`
+	UserDefine2                string        `json:"UserDefine2"`
+	UserDefine4                string        `json:"UserDefine4"`
+	UserDefine5                string        `json:"UserDefine5"`
+	UserName                   string        `json:"UserName"`
+	UserSettings               string        `json:"UserSettings"`
+	UserXML                    string        `json:"UserXML"`
+	ZipCode                    string        `json:"ZipCode"`
+	RoleName                   string        `json:"RoleName"`
+	RolePermissions            string        `json:"RolePermissions"`
+	RoleID                     int           `json:"RoleId"`
+	Permissions                []interface{} `json:"Permissions"`
+	CustomerID                 int           `json:"CustomerId"`
+	DateCreated                string        `json:"DateCreated"`
+	DateUpdated                string        `json:"DateUpdated"`
+	Description                string        `json:"Description"`
+	EnableTenancy              bool          `json:"EnableTenancy"`
+	Name                       string        `json:"Name"`
+	TenantID                   string        `json:"TenantId"`
+	ElapsedTimeInMillseconds   int           `json:"ElapsedTimeInMillseconds"`
+	ErrorMessage               string        `json:"ErrorMessage"`
+	SuccessMessage             string        `json:"SuccessMessage"`
+	HasError                   bool          `json:"HasError"`
+	ID                         int           `json:"Id"`
+}
+
+type Associated struct {
+	CustomerID               int     `json:"CustomerId"`
+	DateCreated              string  `json:"DateCreated"`
+	DateUpdated              string  `json:"DateUpdated"`
+	EnableTenancy            bool    `json:"EnableTenancy"`
+	Name                     string  `json:"Name"`
+	TenantID                 string  `json:"TenantId"`
+	ElapsedTimeInMillseconds int     `json:"ElapsedTimeInMillseconds"`
+	ErrorMessage             string  `json:"ErrorMessage"`
+	SuccessMessage           string  `json:"SuccessMessage"`
+	HasError                 bool    `json:"HasError"`
+	ID                       int     `json:"Id"`
+	Icon                     *string `json:"Icon,omitempty"`
+	MultiAssign              *bool   `json:"MultiAssign,omitempty"`
 }

@@ -1,4 +1,4 @@
-package getStaffByZone
+package getAllUsersByDept
 
 import (
 	"encoding/base64"
@@ -35,11 +35,11 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Staff := RestCallGetStaffByZone(input.IP, input.CustomerId, input.Username, input.Password, input.Zone)
+	Response := RestCallGetUsersByDepartment(input.IP, input.CustomerId, input.Username, input.Password, input.Department)
 
-	output := &Output{Staff: Staff}
+	output := &Output{Users: Response}
 
-	// fmt.Println("Output: ", output.Staff)
+	// fmt.Println("Output: ", output.Users)
 	// ctx.Logger().Info("Output: ", output)
 
 	err = ctx.SetOutputObject(output)
@@ -50,17 +50,19 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-// RestCallGetStaffByZoneGroup("52.45.17.177:802", 2047, "afadmin", "admin", 12091)
-func RestCallGetStaffByZone(IP string, customerId string, uname string, pword string, zone string) []string {
-	username := uname
-	password := pword
-	ListOfObjsWithZone := []Staff{}
+func RestCallGetUsersByDepartment(IP string, customerId string, uname string, pword string, department string) []string {
+	var departmentValue interface{}
+	if intValue, err := strconv.Atoi(department); err == nil {
+		departmentValue = intValue
+	} else {
+		departmentValue = department
+	}
 
 	// Create an HTTP client
 	client := &http.Client{}
 
-	// Create the request ADDED &NumberOfRecords=10000. NOT GOOD
-	url := "http://" + IP + "/XpertRestApi/api/Staff/GetAll?CustomerId=" + (customerId)+"&NumberOfRecords=10000"
+	// Create the request
+	url := "http://" + IP + "/XpertRestApi/api/Users/GetAll?CustomerId=" + customerId
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
@@ -68,7 +70,7 @@ func RestCallGetStaffByZone(IP string, customerId string, uname string, pword st
 	}
 
 	// Add basic authentication to the request header
-	auth := username + ":" + password
+	auth := uname + ":" + pword
 	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
 	req.Header.Add("Authorization", basicAuth)
 
@@ -88,28 +90,23 @@ func RestCallGetStaffByZone(IP string, customerId string, uname string, pword st
 		return []string{}
 	}
 
-	translatedData := &GetAllStaffReponse{}
+	translatedData := &GetAllUsersResponse{}
 	json.Unmarshal(body, &translatedData)
 
-	ZoneId, _ := strconv.Atoi(zone) // var checking if building is int Id, if not, set to -1
-	if (ZoneId == 0){ZoneId = -1} 
+	usersInDepartment := []User{}
+	// check users and associated departments for match
 	for _, obj := range translatedData.List {
-
-		var zones []Zones
-		err := json.Unmarshal([]byte(obj.CurrentZones), &zones)
-		if err != nil {
-			continue
-		} else if len(zones) == 0 {
-			continue
-		}
-		
-		if zones[0].ZoneID == ZoneId || zones[0].ZoneName == zone {
-			ListOfObjsWithZone = append(ListOfObjsWithZone, obj)
+		if len(obj.AssociatedDepts) > 0 {
+			for _, dept := range obj.AssociatedDepts {
+				if dept.ID == departmentValue || dept.Name == departmentValue {
+					usersInDepartment = append(usersInDepartment, obj)
+				}
+			}
 		}
 	}
 
 	var jsonStrings []string // return data as string array
-	for _, asset := range ListOfObjsWithZone {
+	for _, asset := range usersInDepartment {
 		jsonData, err2 := json.Marshal(asset)
 		if err2 != nil {
 			fmt.Println("Error:", err)
@@ -117,7 +114,6 @@ func RestCallGetStaffByZone(IP string, customerId string, uname string, pword st
 		}
 		jsonStrings = append(jsonStrings, string(jsonData))
 	}
-
 
 	return jsonStrings
 }
