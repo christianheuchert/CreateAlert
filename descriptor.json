@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "title": "A1: Get Users By Group",
   "description": "Returns Array of Users",
-  "homepage": "https://github.com/project-flogo/tree/master/examples/activity",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetUsersByGroup",
   "input": [
     {
       "name": "IP",
