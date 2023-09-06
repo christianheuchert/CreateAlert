@@ -1,45 +1,151 @@
 {
-  "name": "Send Priority Message To Assets",
+  "name": "Parse Xpert Message",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Send Priority Message To Assets",
-  "description": "Sends priority message to staffs devices, on success returns true, else false",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/SendPriorityMessageToAssets",
+  "title": "Parse Xpert Message",
+  "description": "Parses Xpert Message for later use",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/ParseUnknownXpertMessage",
   "input": [
     {
-      "name": "IP",
+      "name": "XpertMessageJSON",
       "type": "string",
       "required": true
     },
     {
-      "name": "CustomerId",
+      "name": "DeviceMACTarget",
       "type": "string",
-      "required": true
+      "required": false
     },
     {
-      "name": "Username",
+      "name": "TimestampTarget",
       "type": "string",
-      "required": true
+      "required": false
     },
     {
-      "name": "Password",
+      "name": "DeviceLogIdTarget",
       "type": "string",
-      "required": true
+      "required": false
     },
     {
-      "name": "StaffIdList",
+      "name": "StatusReportReasonTarget",
       "type": "string",
-      "required": true
+      "required": false
     },
     {
-      "name": "Message",
+      "name": "BatteryLevelTarget",
       "type": "string",
-      "required": true
+      "required": false
+    },
+    {
+      "name": "TemperatureTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "HumidityTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "MapIdTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "XTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "YTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "ZoneTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "GeoLattitudeTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "GeoLongitudeTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "ItemIdTarget",
+      "type": "string",
+      "required": false
+    },
+    {
+      "name": "DisplayNameTarget",
+      "type": "string",
+      "required": false
     }
   ],
   "output": [
     {
-      "name": "Status",
+      "name": "DeviceMAC",
+      "type": "string"
+    },
+    {
+      "name": "Timestamp",
+      "type": "string"
+    },
+    {
+      "name": "DeviceLogId",
+      "type": "string"
+    },
+    {
+      "name": "StatusReportReason",
+      "type": "string"
+    },
+    {
+      "name": "BatteryLevel",
+      "type": "string"
+    },
+    {
+      "name": "Temperature",
+      "type": "string"
+    },
+    {
+      "name": "Humidity",
+      "type": "string"
+    },
+    {
+      "name": "MapId",
+      "type": "string"
+    },
+    {
+      "name": "X",
+      "type": "string"
+    },
+    {
+      "name": "Y",
+      "type": "string"
+    },
+    {
+      "name": "Zone",
+      "type": "string"
+    },
+    {
+      "name": "GeoLattitude",
+      "type": "string"
+    },
+    {
+      "name": "GeoLongitude",
+      "type": "string"
+    },
+    {
+      "name": "ItemId",
+      "type": "string"
+    },
+    {
+      "name": "DisplayName",
       "type": "string"
     }
   ]

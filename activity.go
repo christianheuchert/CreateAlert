@@ -1,14 +1,9 @@
-package SendPriorityMessageToAssets
+package ParseUnknownXpertMessage
 
 import (
-	"encoding/base64"
 	"encoding/json"
-	"strconv"
-
 	"fmt"
-	// "io"
-	"net/http"
-	"net/url"
+	"strings"
 
 	"github.com/project-flogo/core/activity"
 )
@@ -17,7 +12,7 @@ func init() {
 	_ = activity.Register(&Activity{}) //activity.Register(&Activity{}, New) to create instances using factory method 'New'
 }
 
-var activityMd = activity.ToMetadata(&Input{}, &Output{})
+var activityMd = activity.ToMetadata( &Input{}, &Output{})
 
 // Activity is an sample Activity that can be used as a base to create a custom activity
 type Activity struct {
@@ -37,11 +32,30 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	Status := SendPriorityMessageToAssets(input.IP, input.CustomerId, input.Username, input.Password, input.StaffIdList, input.Message)
+	// Unmarshal the JSON string into a map[string]interface{}
+	var data map[string]interface{}
+	if err := json.Unmarshal([]byte(input.XpertMessageJSON), &data); err != nil {
+		fmt.Println("Error converting JSON to Map")
+	}
 
-	output := &Output{Status: Status}
+	output := &Output{
+		DeviceMAC: extractValues(data, input.DeviceMACTarget),
+		Timestamp: extractValues(data, input.TimestampTarget),
+		DeviceLogId: extractValues(data, input.DeviceLogIdTarget),
+		StatusReportReason: extractValues(data, input.StatusReportReasonTarget),
+		BatteryLevel: extractValues(data, input.BatteryLevelTarget),
+		Temperature: "",
+		Humidity: "",
+		MapId: extractValues(data, input.MapIdTarget),
+		X: extractValues(data, input.XTarget),
+		Y: extractValues(data, input.YTarget),
+		Zone: extractValues(data, input.ZoneTarget),
+		GeoLattitude: "",
+		GeoLongitude: "",
+		ItemId: extractValues(data, input.ItemIdTarget), 
+		DisplayName: extractValues(data, input.DisplayNameTarget),
+	}
 
-	// fmt.Println("Output: ", output.Status)
 	// ctx.Logger().Info("Output: ", output)
 
 	err = ctx.SetOutputObject(output)
@@ -52,60 +66,26 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	return true, nil
 }
 
-func SendPriorityMessageToAssets(IP string, CustomerId string, username string, password string, StaffIdList string, Message string)string{
+func extractValues (JSON map[string]interface{}, target string) string{
 
-	// filtering url string's special characters
-	FilteredMessage := url.QueryEscape(Message)
+	// Split the target into dot-separated keys
+	keys := strings.Split(target, ".")
 
-	// Create an HTTP client
-	client := &http.Client{}
-
-	var asset Asset
-	assetCheck := json.Unmarshal([]byte(StaffIdList), &asset) // check if Asset Obj
-	if (assetCheck == nil){ // if no error puting into asset struct, then obj
-		StaffIdList = strconv.Itoa(asset.ID)
+	// Traverse the map using the keys
+	var value interface{}
+	current := JSON
+	for _, key := range keys {
+		val, ok := current[key]
+		if ok {
+			// Update 'current' to the value of the current key
+			current, _ = val.(map[string]interface{})
+			value = val
+		}
 	}
 
-	//Hardcoded variables
-	MessagePriority := "1" //high
-	MessageOptions := "00000110" // Two-Tone
-	MessageId := "1"
-	MessageExpirationSeconds := "0" // never
-
-	// Create the request
-	url := "http://" + IP + "/XpertRestApi/api/Device/DisplayPriorityMessageOnTagNotif?" +
-		"StaffIdList=" + StaffIdList + "&" +
-		"Message=" + FilteredMessage + "&" +
-		"MessageId=" + MessageId + "&" +
-		"MessagePriority=" + MessagePriority + "&" +
-		"MessageOptions=" + MessageOptions + "&" +
-		"MessageExpirationSeconds=" + MessageExpirationSeconds + "&" +
-		"CustomerId=" + CustomerId
-	req, err := http.NewRequest("POST", url, nil)
-	if err != nil {
-		fmt.Println("Error creating request:", err)
-		return err.Error()
+	if value == nil {
+		return ""
 	}
 
-	req.Header.Add("Content-Type", "application/json")
-
-	// Add basic authentication to the request header
-	auth := username + ":" + password
-	basicAuth := "Basic " + base64.StdEncoding.EncodeToString([]byte(auth))
-	req.Header.Add("Authorization", basicAuth)
-
-	// Perform the request
-	resp, err := client.Do(req)
-	if err != nil {
-		fmt.Println("Error making request:", err)
-		return err.Error()
-	}
-	defer resp.Body.Close()
-
-	returnedStatus := "false"
-	if(resp.Status == "200 OK"){
-		returnedStatus = "true"
-	}
-
-	return returnedStatus
+	return fmt.Sprintf("%v", value)
 }

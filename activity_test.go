@@ -1,4 +1,4 @@
-package SendPriorityMessageToAssets
+package ParseUnknownXpertMessage
 
 import (
 	"testing"
@@ -20,8 +20,24 @@ func TestEval(t *testing.T) {
 
 	act := &Activity{}
 	tc := test.NewActivityContext(act.Metadata())
-	input := &Input{IP: "52.45.17.177:802", CustomerId: "1", Username: "afadmin", Password: "admin", StaffIdList: "9064,37685", Message: "Test Priority-Multi-Message 4"}
-	// StaffIdList "9064" OR "9064,37685" OR "{"Id": 9064}"
+	input := &Input{
+		XpertMessageJSON: "{\"MAC\":\"C4:CB:6B:22:1B:DA\",\"pos\":{\"mapID\":\"14741\",\"x\":1168,\"y\":565},\"status\":{\"rpt\":0,\"sfsw\":0,\"chg\":0,\"batt\":40,\"sqn\":0}}",
+		DeviceMACTarget: "XpertMessage.MAC",
+		TimestampTarget: "",
+		DeviceLogIdTarget: "",
+		StatusReportReasonTarget: "",
+		BatteryLevelTarget: "XpertMessage.status.batt",
+		TemperatureTarget: "",
+		HumidityTarget: "",
+		MapIdTarget: "XpertMessage.pos.mapID",
+		XTarget: "XpertMessage.pos.x",
+		YTarget: "XpertMessage.pos.y",
+		ZoneTarget: "",
+		GeoLattitudeTarget: "",
+		GeoLongitudeTarget: "",
+		ItemIdTarget: "",
+		DisplayNameTarget: "",
+	}
 	err := tc.SetInputObject(input)
 	assert.Nil(t, err)
 
@@ -29,9 +45,8 @@ func TestEval(t *testing.T) {
 	assert.True(t, done)
 	assert.Nil(t, err)
 
-	output := &Output{} 
+	output := &Output{}
 	err = tc.GetOutputObject(output)
 	assert.Nil(t, err)
-
-	assert.Equal(t, "true", output.Status)
+	assert.Equal(t, "C4:CB:6B:22:1B:DA", output.DeviceMAC)
 }
