@@ -1,57 +1,16 @@
 # Store Xpert Message
 
-This activity takes a user provided JSON object and dot notation keys for said object. Then, the Xpert Message items are returned.
-
-- NOTE: This activity may not always find values. In the example below, many of the outputs will be empty.
-
-```
-    XpertMessageJSON = {"MAC":"C4:CB:6B:22:1B:DA","pos":{"mapID":"14741","x":1168,"y":565},"status":{"rpt":0,"sfsw":0,"chg":0,"batt":40,"sqn":0}}
-    DeviceMACTarget = "XpertMessage.MAC"
-    MapIdTarget = "XpertMessage.pos.mapID"
-    XTarget = "XpertMessage.pos.x"
-    YTarget = "XpertMessage.pos.y"
-    BatteryLevelTarget = "XpertMessage.status.batt"
-
-    Output:
-    DeviceMAC = C4:CB:6B:22:1B:DA
-    Timestamp = ""
-    DeviceLogId = ""
-    StatusReportReason = ""
-    BatteryLevel =   "40"
-    Temperature = ""
-    Humidity = ""
-    MapId = 14741
-    X = 1168
-    Y = 565
-    Zone = ""
-    GeoLattitude = ""
-    GeoLongitude = ""
-    ItemId = ""
-    DisplayName = ""
-```
+This activity receives and Xpert Message and stores it for later use.
+WIP: This activity is not complete. GeoLattitude, GeoLongitude, Temperature, and Humidity are always returned as empty strings.
+An xpertMessage with those fields included is required to accruately include them into the parser.
 
 ## Configuration
 
 ### Input:
 
-| Name                     | Type   | Description                                                                                                         |
-| :----------------------- | :----- | :------------------------------------------------------------------------------------------------------------------ |
-| XpertMessageJSON         | string | JSON object holding device related status details. e.g. "{}"                                                        |
-| DeviceMACTarget          | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].DeviceUniqueID"            |
-| TimestampTarget          | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].TimeStamp"                 |
-| DeviceLogIdTarget        | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].DeviceLogId"               |
-| StatusReportReasonTarget | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].Status.DeviceReportReason" |
-| BatteryLevelTarget       | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].Status.BatteryLevel"       |
-| TemperatureTarget        | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].Therm.Temperature"         |
-| HumidityTarget           | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].Them.Humidity"             |
-| MapIdTarget              | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.Data.MapId"                                 |
-| XTarget                  | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.Location.X"                                 |
-| YTarget                  | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.Location.Y"                                 |
-| ZoneTarget               | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.Location.Zone"                              |
-| GeoLattitudeTarget       | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.Location.Lattitude"                         |
-| GeoLongitudeTarget       | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.Location.Longitude"                         |
-| ItemIdTarget             | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].Itme.ItemId"               |
-| DisplayNameTarget        | string | Dot notation indicating where to search JSON object. e.g. "XpertMessage.DeviceReports[0].RTLSModel2D.DisplayName"   |
+| Name         | Type   | Description                                       |
+| :----------- | :----- | :------------------------------------------------ |
+| XpertMessage | string | JSON object holding device realted status details |
 
 ### Output:
 

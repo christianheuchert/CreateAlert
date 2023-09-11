@@ -1,90 +1,15 @@
 {
-  "name": "Parse Unknown Xpert Message",
+  "name": "Parse Xpert Message",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Parse Unknown Xpert Message",
+  "title": "Parse Xpert Message",
   "description": "Parses Xpert Message for later use",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/ParseUnknownXpertMessage",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/ParseXpertMessage",
   "input": [
     {
-      "name": "XpertMessageJSON",
+      "name": "XpertMessage",
       "type": "string",
       "required": true
-    },
-    {
-      "name": "DeviceMACTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "TimestampTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "DeviceLogIdTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "StatusReportReasonTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "BatteryLevelTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "TemperatureTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "HumidityTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "MapIdTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "XTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "YTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "ZoneTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "GeoLattitudeTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "GeoLongitudeTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "ItemIdTarget",
-      "type": "string",
-      "required": false
-    },
-    {
-      "name": "DisplayNameTarget",
-      "type": "string",
-      "required": false
     }
   ],
   "output": [

@@ -1,80 +1,20 @@
-package ParseUnknownXpertMessage
+package ParseXpertMessage
 
 import "github.com/project-flogo/core/data/coerce"
 
 type Input struct {
-	XpertMessageJSON string `md:"XpertMessageJSON,required"`
-	DeviceMACTarget string `md:"DeviceMACTarget"`
-	TimestampTarget string `md:"TimestampTarget"`
-	DeviceLogIdTarget string `md:"DeviceLogIdTarget"`
-	StatusReportReasonTarget string `md:"StatusReportReasonTarget"`
-	BatteryLevelTarget string `md:"BatteryLevelTarget"`
-	TemperatureTarget string `md:"TemperatureTarget"`
-	HumidityTarget string `md:"HumidityTarget"`
-	MapIdTarget string `md:"MapIdTarget"`
-	XTarget string `md:"XTarget"`
-	YTarget string `md:"YTarget"`
-	ZoneTarget string `md:"ZoneTarget"`
-	GeoLattitudeTarget string `md:"GeoLattitudeTarget"`
-	GeoLongitudeTarget string `md:"GeoLongitudeTarget"`
-	ItemIdTarget string `md:"ItemIdTarget"`
-	DisplayNameTarget string `md:"DisplayNameTarget"`
+	XpertMessage string `md:"XpertMessage,required"`
 }
 
 func (r *Input) FromMap(values map[string]interface{}) error {
-	strVal, _ := coerce.ToString(values["XpertMessageJSON"])
-	r.XpertMessageJSON = strVal
-	strVal, _ = coerce.ToString(values["DeviceMACTarget"])
-	r.DeviceMACTarget = strVal
-	strVal, _ = coerce.ToString(values["TimestampTarget"])
-	r.TimestampTarget = strVal
-	strVal, _ = coerce.ToString(values["DeviceLogIdTarget"])
-	r.DeviceLogIdTarget = strVal
-	strVal, _ = coerce.ToString(values["StatusReportReasonTarget"])
-	r.StatusReportReasonTarget = strVal
-	strVal, _ = coerce.ToString(values["BatteryLevelTarget"])
-	r.BatteryLevelTarget = strVal
-	strVal, _ = coerce.ToString(values["TemperatureTarget"])
-	r.TemperatureTarget = strVal
-	strVal, _ = coerce.ToString(values["HumidityTarget"])
-	r.HumidityTarget = strVal
-	strVal, _ = coerce.ToString(values["MapIdTarget"])
-	r.MapIdTarget = strVal
-	strVal, _ = coerce.ToString(values["XTarget"])
-	r.XTarget = strVal
-	strVal, _ = coerce.ToString(values["YTarget"])
-	r.YTarget = strVal
-	strVal, _ = coerce.ToString(values["ZoneTarget"])
-	r.ZoneTarget = strVal
-	strVal, _ = coerce.ToString(values["GeoLattitudeTarget"])
-	r.GeoLattitudeTarget = strVal
-	strVal, _ = coerce.ToString(values["GeoLongitudeTarget"])
-	r.GeoLongitudeTarget = strVal
-	strVal, _ = coerce.ToString(values["ItemIdTarget"])
-	r.ItemIdTarget = strVal
-	strVal, _ = coerce.ToString(values["DisplayNameTarget"])
-	r.DisplayNameTarget = strVal
+	strVal, _ := coerce.ToString(values["XpertMessage"])
+	r.XpertMessage = strVal
 	return nil
 }
 
 func (r *Input) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"XpertMessageJSON": r.XpertMessageJSON,
-		"DeviceMACTarget": r.DeviceMACTarget,
-		"TimestampTarget": r.TimestampTarget,
-		"DeviceLogIdTarget": r.DeviceLogIdTarget,
-		"StatusReportReasonTarget": r.StatusReportReasonTarget,
-		"BatteryLevelTarget": r.BatteryLevelTarget,
-		"TemperatureTarget": r.TemperatureTarget,
-		"HumidityTarget": r.HumidityTarget,
-		"MapIdTarget": r.MapIdTarget,
-		"XTarget": r.XTarget,
-		"YTarget": r.YTarget,
-		"ZoneTarget": r.ZoneTarget,
-		"GeoLattitudeTarget": r.GeoLattitudeTarget,
-		"GeoLongitudeTarget": r.GeoLongitudeTarget,
-		"ItemIdTarget": r.ItemIdTarget,
-		"DisplayNameTarget": r.DisplayNameTarget,
+		"XpertMessage": r.XpertMessage,
 	}
 }
 
@@ -148,4 +88,74 @@ func (o *Output) ToMap() map[string]interface{} {
 		"ItemId": o.ItemId,
 		"DisplayName": o.DisplayName,
 	}
+}
+
+type XpertMsg struct {
+	DeviceReports    []struct {
+		Attributes                []interface{}  `json:"Attributes"`
+		AutoidEpc                 string `json:"AUTOID_EPC"`
+		DataTimestamp             string `json:"DataTimestamp"`
+		DeviceActionBit           bool   `json:"DeviceActionBit"`
+		DeviceLogID               int    `json:"DeviceLogID"`
+		DeviceModel               string `json:"DeviceModel"`
+		DeviceSerialNumber        string `json:"DeviceSerialNumber"`
+		DeviceType                string `json:"DeviceType"`
+		DeviceUniqueID            string `json:"DeviceUniqueID"`
+		DeviceUniqueIDDisplayName string `json:"DeviceUniqueID_DisplayName"`
+		Events                    []interface{}  `json:"Events"`
+		Item                      struct {
+			ItemID      int    `json:"ItemId"`
+			DateCreated string `json:"DateCreated"`
+			DateUpdated string `json:"DateUpdated"`
+		} `json:"Item"`
+		LastEvent struct {
+			StartDateTime string `json:"StartDateTime"`
+			SystemName    string `json:"SystemName"`
+		} `json:"LastEvent"`
+		LastEventIndex    int       `json:"LastEventIndex"`
+		LOCMessageContent string    `json:"LOCMessageContent"`
+		MessageID         string    `json:"MessageId"`
+		MessageType       string    `json:"MessageType"`
+		ReceivedTimestamp string `json:"ReceivedTimestamp"`
+		RTLSAddress struct {
+		} `json:"RTLSAddress"`
+		RTLSContact struct {
+		} `json:"RTLSContact"`
+		RTLSGeo struct {
+		} `json:"RTLSGeo"`
+		Rtlsgps struct {
+		} `json:"RTLSGPS"`
+		RTLSModel2D struct {
+			IsValid        bool      `json:"IsValid"`
+			PosDisplayName string    `json:"PosDisplayName"`
+			PosMapID       int       `json:"PosMapID"`
+			PosModelID     int       `json:"PosModelID"`
+			PosX           float64   `json:"PosX"`
+			PosY           float64   `json:"PosY"`
+			PosZoneIDs     string    `json:"PosZoneIDs"`
+			Timestamp      string `json:"Timestamp"`
+		} `json:"RTLSModel2D"`
+		Sensor struct {
+		} `json:"Sensor"`
+		SequenceNumber int `json:"SequenceNumber"`
+		Status         struct {
+			BatteryLevel1      float64   `json:"BatteryLevel1"`
+			ChargerConnected   bool      `json:"ChargerConnected"`
+			Data2              string    `json:"Data2"`
+			DeviceReportReason int       `json:"DeviceReportReason"`
+			IsValid            bool      `json:"IsValid"`
+			Timestamp          string `json:"Timestamp"`
+		} `json:"Status"`
+		DateCreated string `json:"DateCreated"`
+		DateUpdated string `json:"DateUpdated"`
+	} `json:"DeviceReports"`
+	ItemInfo struct {
+		ItemID      int    `json:"ItemId"`
+		DateCreated string `json:"DateCreated"`
+		DateUpdated string `json:"DateUpdated"`
+	} `json:"ItemInfo"`
+	ProximityReports  []interface{}     `json:"ProximityReports"`
+	ReceivedTimestamp string `json:"ReceivedTimestamp"`
+	SchemaName        string    `json:"SchemaName"`
+	SchemaVersion     string    `json:"SchemaVersion"`
 }
