@@ -2,7 +2,7 @@
   "name": "Parse Xpert Message",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "Parse Xpert Message",
+  "title": "A1: Parse Xpert Message",
   "description": "Parses Xpert Message for later use",
   "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/ParseXpertMessage",
   "input": [
