@@ -2,7 +2,7 @@
   "name": "Parse Xpert Message",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A1: Parse Xpert Message",
+  "title": "A2: Parse Xpert Message",
   "description": "Parses Xpert Message for later use",
   "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/ParseXpertMessage",
   "input": [
@@ -55,7 +55,7 @@
     },
     {
       "name": "Zone",
-      "type": "string"
+      "type": "array"
     },
     {
       "name": "GeoLattitude",

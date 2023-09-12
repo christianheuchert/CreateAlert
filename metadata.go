@@ -29,7 +29,7 @@ type Output struct {
 	MapId string `md:"MapId"`
 	X string `md:"X"`
 	Y string `md:"Y"`
-	Zone string `md:"Zone"`
+	Zone []string `md:"Zone"`
 	GeoLattitude string `md:"GeoLattitude"`
 	GeoLongitude string `md:"GeoLongitude"`
 	ItemId string `md:"ItemId"`
@@ -57,8 +57,10 @@ func (o *Output) FromMap(values map[string]interface{}) error {
 	o.X = strVal
 	strVal, _ = coerce.ToString(values["Y"])
 	o.Y = strVal
-	strVal, _ = coerce.ToString(values["Zone"])
-	o.Zone = strVal
+	zoneList, ok:= (values["Zone"]).([]string) // type assertion
+	if ok {
+		o.Zone = zoneList
+	}
 	strVal, _ = coerce.ToString(values["GeoLattitude"])
 	o.GeoLattitude = strVal
 	strVal, _ = coerce.ToString(values["GeoLongitude"])
@@ -158,4 +160,10 @@ type XpertMsg struct {
 	ReceivedTimestamp string `json:"ReceivedTimestamp"`
 	SchemaName        string    `json:"SchemaName"`
 	SchemaVersion     string    `json:"SchemaVersion"`
+}
+
+type Zone struct {
+	ZoneID   int    `json:"ZoneID"`
+	ZoneName string `json:"ZoneName"`
+	ZoneType string `json:"ZoneType"`
 }

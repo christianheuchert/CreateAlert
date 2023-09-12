@@ -40,6 +40,21 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
+	// Unmarshal zones into an array of strings 
+	var zones []Zone
+	var zoneJsonStrings []string // return data as string array
+	zonesCheck := json.Unmarshal([]byte(XpertMessage.DeviceReports[0].RTLSModel2D.PosZoneIDs), &zones)
+	if (zonesCheck == nil){ // Zone array exists
+		for _, zoneObj := range zones {
+			jsonData, err2 := json.Marshal(zoneObj)
+			if err2 != nil {
+				fmt.Println("Error:", err)
+			}
+			zoneJsonStrings = append(zoneJsonStrings, string(jsonData))
+		}
+	}
+	fmt.Println("test: ", XpertMessage.DeviceReports[0].RTLSModel2D.PosX)
+
 	output := &Output{
 		DeviceMAC: XpertMessage.DeviceReports[0].DeviceUniqueID,
 		Timestamp: XpertMessage.DeviceReports[0].DataTimestamp,
@@ -51,21 +66,19 @@ func (a *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		MapId: strconv.Itoa(XpertMessage.DeviceReports[0].RTLSModel2D.PosMapID),
 		X: strconv.FormatFloat(XpertMessage.DeviceReports[0].RTLSModel2D.PosX, 'f', -1, 64),
 		Y: strconv.FormatFloat(XpertMessage.DeviceReports[0].RTLSModel2D.PosY, 'f', -1, 64),
-		Zone: XpertMessage.DeviceReports[0].RTLSModel2D.PosZoneIDs,
+		Zone: zoneJsonStrings,
 		GeoLattitude: "",
 		GeoLongitude: "",
 		ItemId: strconv.Itoa(XpertMessage.DeviceReports[0].Item.ItemID), 
 		DisplayName: XpertMessage.DeviceReports[0].RTLSModel2D.PosDisplayName,
 	}
 
-	// ctx.Logger().Info("Output: ", output)
+	// ctx.Logger().Info("Output: ", output.Zone)
 
 	err = ctx.SetOutputObject(output)
 	if err != nil {
 		return true, err
 	}
-
-	
 
 	return true, nil
 }
