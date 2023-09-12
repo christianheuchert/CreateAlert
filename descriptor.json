@@ -2,7 +2,7 @@
   "name": "Get Staff By Zone",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A2: Get Staff By Zone",
+  "title": "Test: Get Staff By Zone",
   "description": "Returns Array of Staff",
   "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetStaffByZone",
   "input": [
