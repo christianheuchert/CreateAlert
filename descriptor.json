@@ -1,77 +1,41 @@
 {
-  "name": "Parse Xpert Message",
+  "name": "Get Staff By Zone",
   "type": "flogo:activity",
   "version": "0.0.1",
-  "title": "A2: Parse Xpert Message",
-  "description": "Parses Xpert Message for later use",
-  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/ParseXpertMessage",
+  "title": "A2: Get Staff By Zone",
+  "description": "Returns Array of Staff",
+  "homepage": "https://github.com/AiRISTAFlowInc/FlowActivities/tree/main/GetStaffByZone",
   "input": [
     {
-      "name": "XpertMessage",
+      "name": "IP",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "CustomerId",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Username",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Password",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "Zone",
       "type": "string",
       "required": true
     }
   ],
   "output": [
     {
-      "name": "DeviceMAC",
-      "type": "string"
-    },
-    {
-      "name": "Timestamp",
-      "type": "string"
-    },
-    {
-      "name": "DeviceLogId",
-      "type": "string"
-    },
-    {
-      "name": "StatusReportReason",
-      "type": "string"
-    },
-    {
-      "name": "BatteryLevel",
-      "type": "string"
-    },
-    {
-      "name": "Temperature",
-      "type": "string"
-    },
-    {
-      "name": "Humidity",
-      "type": "string"
-    },
-    {
-      "name": "MapId",
-      "type": "string"
-    },
-    {
-      "name": "X",
-      "type": "string"
-    },
-    {
-      "name": "Y",
-      "type": "string"
-    },
-    {
-      "name": "Zone",
+      "name": "Staff",
       "type": "array"
-    },
-    {
-      "name": "GeoLattitude",
-      "type": "string"
-    },
-    {
-      "name": "GeoLongitude",
-      "type": "string"
-    },
-    {
-      "name": "ItemId",
-      "type": "string"
-    },
-    {
-      "name": "DisplayName",
-      "type": "string"
     }
   ]
 }

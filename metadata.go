@@ -1,165 +1,145 @@
-package ParseXpertMessage
+package getStaffByZone
 
-import "github.com/project-flogo/core/data/coerce"
+import (
+	"github.com/project-flogo/core/data/coerce"
+)
 
 type Input struct {
-	XpertMessage string `md:"XpertMessage,required"`
+	IP string  `md:"IP,required"`
+	CustomerId string`md:"CustomerId,required"`
+	Username string `md:"Username,required"`
+	Password string `md:"Password,required"`
+	Zone string `md:"Zone,required"`
 }
 
-func (r *Input) FromMap(values map[string]interface{}) error {
-	strVal, _ := coerce.ToString(values["XpertMessage"])
-	r.XpertMessage = strVal
+func (i *Input) FromMap(values map[string]interface{}) error {
+	strVal, _ := coerce.ToString(values["IP"])
+	i.IP = strVal
+
+	strVal, _ = coerce.ToString(values["CustomerId"])
+	i.CustomerId = strVal
+
+	strVal, _ = coerce.ToString(values["Username"])
+	i.Username = strVal
+
+	strVal, _ = coerce.ToString(values["Password"])
+	i.Password = strVal
+
+	strVal, _ = coerce.ToString(values["Zone"])
+	i.Zone = strVal
 	return nil
 }
 
-func (r *Input) ToMap() map[string]interface{} {
+func (i *Input) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"XpertMessage": r.XpertMessage,
+		"IP": i.IP,
+		"CustomerId": i.CustomerId,
+		"Username": i.Username,
+		"Password": i.Password,
+		"Zone": i.Zone,
 	}
 }
 
 type Output struct {
-	DeviceMAC string `md:"DeviceMAC"`
-	Timestamp string `md:"Timestamp"`
-	DeviceLogId string `md:"DeviceLogId"`
-	StatusReportReason string `md:"StatusReportReason"`
-	BatteryLevel string `md:"BatteryLevel"`
-	Temperature string `md:"Temperature"`
-	Humidity string `md:"Humidity"`
-	MapId string `md:"MapId"`
-	X string `md:"X"`
-	Y string `md:"Y"`
-	Zone []string `md:"Zone"`
-	GeoLattitude string `md:"GeoLattitude"`
-	GeoLongitude string `md:"GeoLongitude"`
-	ItemId string `md:"ItemId"`
-	DisplayName string `md:"DisplayName"`
+	Staff []string `md:"Staff"`
 }
 
 func (o *Output) FromMap(values map[string]interface{}) error {
-	strVal, _ := coerce.ToString(values["DeviceMAC"])
-	o.DeviceMAC = strVal
-	strVal, _ = coerce.ToString(values["Timestamp"])
-	o.Timestamp = strVal
-	strVal, _ = coerce.ToString(values["DeviceLogId"])
-	o.DeviceLogId = strVal
-	strVal, _ = coerce.ToString(values["StatusReportReason"])
-	o.StatusReportReason = strVal
-	strVal, _ = coerce.ToString(values["BatteryLevel"])
-	o.BatteryLevel = strVal
-	strVal, _ = coerce.ToString(values["Temperature"])
-	o.Temperature = strVal
-	strVal, _ = coerce.ToString(values["Humidity"])
-	o.Humidity = strVal
-	strVal, _ = coerce.ToString(values["MapId"])
-	o.MapId = strVal
-	strVal, _ = coerce.ToString(values["X"])
-	o.X = strVal
-	strVal, _ = coerce.ToString(values["Y"])
-	o.Y = strVal
-	zoneList, ok:= (values["Zone"]).([]string) // type assertion
+	assetList, ok:= (values["Staff"]).([]string) // type assertion
 	if ok {
-		o.Zone = zoneList
+		o.Staff = assetList
 	}
-	strVal, _ = coerce.ToString(values["GeoLattitude"])
-	o.GeoLattitude = strVal
-	strVal, _ = coerce.ToString(values["GeoLongitude"])
-	o.GeoLongitude = strVal
-	strVal, _ = coerce.ToString(values["ItemId"])
-	o.ItemId = strVal
-	strVal, _ = coerce.ToString(values["DisplayName"])
-	o.DisplayName = strVal
+
 	return nil
 }
 
 func (o *Output) ToMap() map[string]interface{} {
 	return map[string]interface{}{
-		"DeviceMAC": o.DeviceMAC,
-		"Timestamp": o.Timestamp,
-		"DeviceLogId": o.DeviceLogId,
-		"StatusReportReason": o.StatusReportReason,
-		"BatteryLevel": o.BatteryLevel,
-		"Temperature": o.Temperature,
-		"Humidity": o.Humidity,
-		"MapId": o.MapId,
-		"X": o.X,
-		"Y": o.Y,
-		"Zone": o.Zone,
-		"GeoLattitude": o.GeoLattitude,
-		"GeoLongitude": o.GeoLongitude,
-		"ItemId": o.ItemId,
-		"DisplayName": o.DisplayName,
+		"Staff":    o.Staff,
 	}
 }
 
-type XpertMsg struct {
-	DeviceReports    []struct {
-		Attributes                []interface{}  `json:"Attributes"`
-		AutoidEpc                 string `json:"AUTOID_EPC"`
-		DataTimestamp             string `json:"DataTimestamp"`
-		DeviceActionBit           bool   `json:"DeviceActionBit"`
-		DeviceLogID               int    `json:"DeviceLogID"`
-		DeviceModel               string `json:"DeviceModel"`
-		DeviceSerialNumber        string `json:"DeviceSerialNumber"`
-		DeviceType                string `json:"DeviceType"`
-		DeviceUniqueID            string `json:"DeviceUniqueID"`
-		DeviceUniqueIDDisplayName string `json:"DeviceUniqueID_DisplayName"`
-		Events                    []interface{}  `json:"Events"`
-		Item                      struct {
-			ItemID      int    `json:"ItemId"`
-			DateCreated string `json:"DateCreated"`
-			DateUpdated string `json:"DateUpdated"`
-		} `json:"Item"`
-		LastEvent struct {
-			StartDateTime string `json:"StartDateTime"`
-			SystemName    string `json:"SystemName"`
-		} `json:"LastEvent"`
-		LastEventIndex    int       `json:"LastEventIndex"`
-		LOCMessageContent string    `json:"LOCMessageContent"`
-		MessageID         string    `json:"MessageId"`
-		MessageType       string    `json:"MessageType"`
-		ReceivedTimestamp string `json:"ReceivedTimestamp"`
-		RTLSAddress struct {
-		} `json:"RTLSAddress"`
-		RTLSContact struct {
-		} `json:"RTLSContact"`
-		RTLSGeo struct {
-		} `json:"RTLSGeo"`
-		Rtlsgps struct {
-		} `json:"RTLSGPS"`
-		RTLSModel2D struct {
-			IsValid        bool      `json:"IsValid"`
-			PosDisplayName string    `json:"PosDisplayName"`
-			PosMapID       int       `json:"PosMapID"`
-			PosModelID     int       `json:"PosModelID"`
-			PosX           float64   `json:"PosX"`
-			PosY           float64   `json:"PosY"`
-			PosZoneIDs     string    `json:"PosZoneIDs"`
-			Timestamp      string `json:"Timestamp"`
-		} `json:"RTLSModel2D"`
-		Sensor struct {
-		} `json:"Sensor"`
-		SequenceNumber int `json:"SequenceNumber"`
-		Status         struct {
-			BatteryLevel1      float64   `json:"BatteryLevel1"`
-			ChargerConnected   bool      `json:"ChargerConnected"`
-			Data2              string    `json:"Data2"`
-			DeviceReportReason int       `json:"DeviceReportReason"`
-			IsValid            bool      `json:"IsValid"`
-			Timestamp          string `json:"Timestamp"`
-		} `json:"Status"`
-		DateCreated string `json:"DateCreated"`
-		DateUpdated string `json:"DateUpdated"`
-	} `json:"DeviceReports"`
-	ItemInfo struct {
-		ItemID      int    `json:"ItemId"`
-		DateCreated string `json:"DateCreated"`
-		DateUpdated string `json:"DateUpdated"`
-	} `json:"ItemInfo"`
-	ProximityReports  []interface{}     `json:"ProximityReports"`
-	ReceivedTimestamp string `json:"ReceivedTimestamp"`
-	SchemaName        string    `json:"SchemaName"`
-	SchemaVersion     string    `json:"SchemaVersion"`
+type Staff struct {
+	Address                      string    `json:"Address"`
+	AlarisStatus                 string    `json:"AlarisStatus"`
+	AlertStatus                  string `json:"AlertStatus"`
+	AssociatedDevices            []interface{}  `json:"AssociatedDevices"`
+	BatteryLevel                 float64    `json:"BatteryLevel"`
+	BedStatus                    string `json:"BedStatus"`
+	CurrentBuildingID            int    `json:"CurrentBuildingID"`
+	CurrentBuildingName          string `json:"CurrentBuildingName"`
+	CurrentSiteName              string `json:"CurrentSiteName"`
+	CurrentFloorName             string `json:"CurrentFloorName"`
+	CurrentMapID                 int    `json:"CurrentMapId"`
+	CurrentModelID               int    `json:"CurrentModelId"`
+	CurrentSiteID                int    `json:"CurrentSiteID"`
+	CurrentTimestamp             string `json:"CurrentTimestamp"`
+	CurrentX                     float64    `json:"CurrentX"`
+	CurrentY                     float64    `json:"CurrentY"`
+	CurrentZones                 string `json:"CurrentZones"`
+	DepartmentID                 int    `json:"DepartmentID"`
+	DepartmentName               string `json:"DepartmentName"`
+	DeviceID                     int    `json:"DeviceID"`
+	DeviceLogID                  int    `json:"DeviceLogID"`
+	DeviceName                   string `json:"DeviceName"`
+	Email                        string `json:"Email"`
+	EnableAlerts                 bool   `json:"EnableAlerts"`
+	EnableHygiene                bool   `json:"EnableHygiene"`
+	EnableSDCT                   bool   `json:"EnableSDCT"`
+	EventCountAcknowledged       int    `json:"EventCountAcknowledged"`
+	EventCountClosed             int    `json:"EventCountClosed"`
+	EventCountNew                int    `json:"EventCountNew"`
+	EventCountOpen               int    `json:"EventCountOpen"`
+	FromLDAP                     bool   `json:"FromLDAP"`
+	GroupID                      int    `json:"GroupID"`
+	GroupName                    string `json:"GroupName"`
+	HealthStatus                 string `json:"HealthStatus"`
+	Icon                         string `json:"Icon"`
+	ImageData                    string `json:"ImageData"`
+	ImageType                    string `json:"ImageType"`
+	IsTestMode                   bool   `json:"IsTestMode"`
+	OldTamper                    bool   `json:"OldTamper"`
+	OldMotion                    bool   `json:"OldMotion"`
+	Latitude                     float64    `json:"Latitude"`
+	Longitude                    float64    `json:"Longitude"`
+	LocationUpdated              string `json:"LocationUpdated"`
+	ModelName                    string `json:"ModelName"`
+	OldBuildingID                int    `json:"OldBuildingID"`
+	OldMapID                     int    `json:"OldMapId"`
+	OldModelID                   int    `json:"OldModelId"`
+	OldSiteID                    int    `json:"OldSiteID"`
+	OldLocationUpdated           string `json:"OldLocationUpdated"`
+	OldX                         float64    `json:"OldX"`
+	OldY                         float64    `json:"OldY"`
+	OldZones                     string `json:"OldZones"`
+	PendingDepartmentDateUpdated string `json:"PendingDepartmentDateUpdated"`
+	PendingDepartmentID          int    `json:"PendingDepartmentId"`
+	PhoneNumber                  string `json:"PhoneNumber"`
+	Portrait                     string `json:"Portrait"`
+	StaffID                      string `json:"StaffID"`
+	StaffSettings                string    `json:"StaffSettings"`
+	Temperature                  string `json:"Temperature"`
+	UseCases                     []string  `json:"UseCases"`
+	MultiAssign                  bool   `json:"MultiAssign"`
+	AssocItemID                  int    `json:"AssocItemID"`
+	PendingDepartmentName        string    `json:"PendingDepartmentName"`
+	AssocItemName                string    `json:"AssocItemName"`
+	CustomerID                   int    `json:"CustomerId"`
+	DateCreated                  string `json:"DateCreated"`
+	DateUpdated                  string `json:"DateUpdated"`
+	Description                  string `json:"Description"`
+	EnableTenancy                bool   `json:"EnableTenancy"`
+	Name                         string `json:"Name"`
+	TenantID                     string `json:"TenantId"`
+	ElapsedTimeInMillseconds     float64    `json:"ElapsedTimeInMillseconds"`
+	ErrorMessage                 string `json:"ErrorMessage"`
+	SuccessMessage               string `json:"SuccessMessage"`
+	HasError                     bool   `json:"HasError"`
+	ID                           int    `json:"Id"`
+} 
+
+type GetAllStaffReponse struct {
+	List                     []Staff      `json:"List"` //
 }
 
 type Zone struct {
